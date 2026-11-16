@@ -1,4 +1,4 @@
-
+```html
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -17,8 +17,9 @@ nav a:hover{color:#ff3030}
 .hero{min-height:420px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px 20px;background:radial-gradient(circle,#6b1010,#220707 50%,#080808 85%)}
 .hero h1{font-size:clamp(48px,9vw,90px);color:#ff3030}
 .hero p{color:#ddd;margin-top:14px}
-.btn{display:inline-block;background:#bd2020;color:white;border:1px solid #ff4848;border-radius:8px;padding:12px 20px;font-weight:bold;margin-top:15px;cursor:pointer;text-decoration:none}
+.btn{display:inline-block;background:#bd2020;color:white;border:1px solid #ff4848;border-radius:8px;padding:12px 20px;font-weight:bold;margin:8px 4px;cursor:pointer;text-decoration:none}
 .btn:hover{background:#ed3030}
+button:disabled{opacity:.5;cursor:not-allowed}
 section{padding:60px 7%;text-align:center}
 h2{font-size:30px;color:#ff3939;margin-bottom:30px}
 .packages{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px}
@@ -37,7 +38,9 @@ input:focus{outline:1px solid #ff3030}
 .auth-card{max-width:440px;margin:auto;background:#171111;border:1px solid #641717;border-radius:15px;padding:25px}
 .auth-card h3{color:#ff3939;margin-bottom:15px;font-size:24px}
 .status{margin-top:15px;color:#ff7777;line-height:1.6;overflow-wrap:anywhere}
-.hidden{display:none}
+.hidden{display:none!important}
+.balance{font-size:26px;color:#ffcc55;margin-top:18px;font-weight:bold}
+.stat{margin-top:12px;color:#ddd}
 @media(max-width:650px){header{justify-content:center}nav{justify-content:center}section{padding:45px 5%}}
 </style>
 </head>
@@ -95,17 +98,19 @@ input:focus{outline:1px solid #ff3030}
   <input id="email" type="email" placeholder="E-posta adresin" autocomplete="email">
   <input id="password" type="password" placeholder="Şifren" autocomplete="current-password">
   <input id="minecraft" type="text" placeholder="Minecraft kullanıcı adın" maxlength="16">
-  <button class="btn" onclick="register()">KAYIT OL</button>
-  <button class="btn" onclick="login()">GİRİŞ YAP</button>
-  <p id="authMessage" class="status"></p>
+  <button class="btn" id="registerBtn" onclick="register()">KAYIT OL</button>
+  <button class="btn" id="loginBtn" onclick="login()">GİRİŞ YAP</button>
+  <p id="authMessage" class="status" role="status"></p>
  </div>
 
  <div class="auth-card hidden" id="playerBox">
   <h3>Oyuncu Panelin</h3>
-  <p id="playerName">Minecraft: -</p>
+  <p id="playerName" class="stat">Minecraft: -</p>
   <p id="approval" class="status"></p>
-  <p id="points" style="margin-top:15px;font-size:25px;color:#ff3939">0 Puan</p>
-  <p id="minutes" style="margin-top:10px;color:#ddd">Toplam süre: 0 dakika</p>
+  <p id="points" class="stat">0 PUAN</p>
+  <p id="minutes" class="stat">Toplam süre: 0 dakika</p>
+  <p id="balance" class="balance">0 TL Bakiye</p>
+  <button class="btn" onclick="refreshPlayer()">YENİLE</button>
   <button class="btn" onclick="logout()">ÇIKIŞ YAP</button>
  </div>
 </section>
@@ -124,141 +129,211 @@ input:focus{outline:1px solid #ff3030}
  <p style="margin-top:10px">Resmî DarkSMP Mağazası</p>
 </footer>
 
-<script type="module">
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+<!-- Supabase kütüphanesi -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-// BURAYA KENDİ SUPABASE BİLGİLERİNİ YAZ
+<script>
 const SUPABASE_URL = "https://frfltsscbbvgjdffrxot.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_TLuw_sK8M8gi4gFwBAx2gg__-t0ahzE";
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-
 const $ = id => document.getElementById(id);
+let supabaseClient = null;
 
 function showMessage(message){
  $("authMessage").textContent = message;
 }
 
+function setButtons(disabled){
+ $("registerBtn").disabled = disabled;
+ $("loginBtn").disabled = disabled;
+}
+
+function getClient(){
+ if(supabaseClient) return supabaseClient;
+
+ if(!window.supabase || !window.supabase.createClient){
+  throw new Error("Supabase kütüphanesi yüklenemedi. Sayfayı yenile.");
+ }
+
+ if(SUPABASE_PUBLISHABLE_KEY === "PUBLISHABLE_KEYINI_BURAYA_YAZ"){
+  throw new Error("Supabase Publishable key henüz eklenmemiş.");
+ }
+
+ supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+ );
+
+ return supabaseClient;
+}
+
 async function register(){
- const email = $("email").value.trim();
- const password = $("password").value;
- const minecraft = $("minecraft").value.trim();
+ setButtons(true);
 
- if(!email || !password || !minecraft){
-  showMessage("Bütün alanları doldur.");
-  return;
- }
- if(!/^[A-Za-z0-9_]{3,16}$/.test(minecraft)){
-  showMessage("Minecraft kullanıcı adı 3-16 karakter olmalı.");
-  return;
- }
- if(password.length < 8){
-  showMessage("Şifren en az 8 karakter olmalı.");
-  return;
- }
+ try{
+  const email = $("email").value.trim();
+  const password = $("password").value;
+  const minecraft = $("minecraft").value.trim();
 
- showMessage("Kayıt oluşturuluyor...");
-
- const {data,error} = await supabase.auth.signUp({
-  email,
-  password,
-  options:{
-   data:{minecraft_username:minecraft}
+  if(!email || !password || !minecraft){
+   showMessage("Bütün alanları doldur.");
+   return;
   }
- });
 
- if(error){
-  showMessage("Hata: "+error.message);
-  return;
- }
+  if(!/^[A-Za-z0-9_]{3,16}$/.test(minecraft)){
+   showMessage("Minecraft kullanıcı adı 3-16 karakter olmalı.");
+   return;
+  }
 
- if(data.session){
-  showMessage("Kayıt başarılı! Hesabın yönetici onayı bekliyor.");
-  await loadPlayer();
- }else{
-  showMessage("Kayıt başarılı! E-postana gelen doğrulama bağlantısına tıkla. Sonra giriş yapabilirsin.");
+  if(password.length < 8){
+   showMessage("Şifren en az 8 karakter olmalı.");
+   return;
+  }
+
+  showMessage("Kayıt oluşturuluyor...");
+
+  const client = getClient();
+
+  const {data,error} = await client.auth.signUp({
+   email:email,
+   password:password,
+   options:{
+    data:{minecraft_username:minecraft}
+   }
+  });
+
+  if(error) throw error;
+
+  if(data.session){
+   showMessage("Kayıt başarılı! Oyuncu panelin açılıyor.");
+   await loadPlayer();
+  }else{
+   showMessage("Kayıt başarılı! E-postana gelen doğrulama bağlantısına tıkla. Ardından giriş yap.");
+  }
+
+ }catch(error){
+  showMessage("Kayıt hatası: "+error.message);
+ }finally{
+  setButtons(false);
  }
 }
 
 async function login(){
- const email = $("email").value.trim();
- const password = $("password").value;
+ setButtons(true);
 
- if(!email || !password){
-  showMessage("E-posta ve şifreni gir.");
-  return;
- }
+ try{
+  const email = $("email").value.trim();
+  const password = $("password").value;
 
- showMessage("Giriş yapılıyor...");
+  if(!email || !password){
+   showMessage("E-posta ve şifreni gir.");
+   return;
+  }
 
- const {error} = await supabase.auth.signInWithPassword({email,password});
+  showMessage("Giriş yapılıyor...");
 
- if(error){
+  const client = getClient();
+
+  const {error} = await client.auth.signInWithPassword({
+   email:email,
+   password:password
+  });
+
+  if(error) throw error;
+
+  await loadPlayer();
+
+ }catch(error){
   showMessage("Giriş hatası: "+error.message);
-  return;
+ }finally{
+  setButtons(false);
  }
-
- await loadPlayer();
 }
 
 async function loadPlayer(){
- const {data:{user}} = await supabase.auth.getUser();
- if(!user) return;
+ try{
+  const client = getClient();
 
- const {data,error} = await supabase
-  .from("players")
-  .select("minecraft_username,approved,total_minutes,points")
-  .eq("user_id",user.id)
-  .maybeSingle();
+  const {data:{user},error:userError} = await client.auth.getUser();
 
- if(error){
+  if(userError) throw userError;
+  if(!user) throw new Error("Oturum bulunamadı. Tekrar giriş yap.");
+
+  const {data,error} = await client
+   .from("players")
+   .select("minecraft_username,approved,total_minutes,points,balance")
+   .eq("user_id",user.id)
+   .maybeSingle();
+
+  if(error) throw error;
+  if(!data) throw new Error("Oyuncu kaydın bulunamadı. Yöneticiyle iletişime geç.");
+
+  $("authBox").classList.add("hidden");
+  $("playerBox").classList.remove("hidden");
+
+  $("playerName").textContent = "Minecraft: "+(data.minecraft_username || "-");
+  $("points").textContent = (data.points ?? 0)+" PUAN";
+  $("minutes").textContent = "Toplam süre: "+(data.total_minutes ?? 0)+" dakika";
+  $("balance").textContent = Number(data.balance ?? 0).toFixed(2)+" TL Bakiye";
+
+  $("approval").textContent = data.approved
+   ? "Hesabın onaylandı!"
+   : "Hesabın yönetici onayı bekliyor.";
+
+  showMessage("");
+
+ }catch(error){
   showMessage("Oyuncu bilgileri alınamadı: "+error.message);
-  return;
  }
+}
 
- if(!data){
-  showMessage("Oyuncu kaydın bulunamadı. Yöneticiyle iletişime geç.");
-  return;
- }
-
- $("authBox").classList.add("hidden");
- $("playerBox").classList.remove("hidden");
- $("playerName").textContent = "Minecraft: "+data.minecraft_username;
- $("points").textContent = data.points+" PUAN";
- $("minutes").textContent = "Toplam süre: "+data.total_minutes+" dakika";
- $("approval").textContent = data.approved
-  ? "Hesabın onaylandı! Puan kazanmaya hazırsın."
-  : "Hesabın yönetici onayı bekliyor.";
+async function refreshPlayer(){
+ showMessage("Bilgiler yenileniyor...");
+ await loadPlayer();
 }
 
 async function logout(){
- await supabase.auth.signOut();
- $("playerBox").classList.add("hidden");
- $("authBox").classList.remove("hidden");
- showMessage("Çıkış yapıldı.");
+ try{
+  const client = getClient();
+  const {error} = await client.auth.signOut();
+  if(error) throw error;
+
+  $("playerBox").classList.add("hidden");
+  $("authBox").classList.remove("hidden");
+  showMessage("Çıkış yapıldı.");
+
+ }catch(error){
+  showMessage("Çıkış hatası: "+error.message);
+ }
 }
 
 window.register = register;
 window.login = login;
 window.logout = logout;
+window.refreshPlayer = refreshPlayer;
 
-const {data:{session}} = await supabase.auth.getSession();
-if(session) await loadPlayer();
+async function restoreSession(){
+ try{
+  const client = getClient();
+  const {data,error} = await client.auth.getSession();
 
-supabase.auth.onAuthStateChange((_event,session)=>{
- if(!session){
-  $("playerBox").classList.add("hidden");
-  $("authBox").classList.remove("hidden");
+  if(error) throw error;
+  if(data.session) await loadPlayer();
+
+ }catch(error){
+  showMessage("Bağlantı hatası: "+error.message);
  }
-});
-</script>
+}
 
-<script>
+restoreSession();
+
 function copyIP(){
  navigator.clipboard.writeText("dark.mcgiris.site")
- .then(()=>{document.getElementById("message").textContent="Sunucu IP'si kopyalandı!"})
- .catch(()=>{document.getElementById("message").textContent="IP: dark.mcgiris.site"});
+ .then(()=>{$("message").textContent="Sunucu IP'si kopyalandı!"})
+ .catch(()=>{$("message").textContent="IP: dark.mcgiris.site"});
 }
 </script>
+
 </body>
 </html>
+```
