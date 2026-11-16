@@ -5,69 +5,178 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DarkSMP | Resmi Mağaza</title>
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,sans-serif;background:#090909;color:#fff}
-header{padding:22px 8%;display:flex;justify-content:space-between;align-items:center;background:#111;border-bottom:1px solid #4d1010}
-.logo{font-size:27px;font-weight:900;color:#e32929}
-nav a{color:#ddd;text-decoration:none;margin-left:22px}
-.hero{text-align:center;padding:100px 20px;background:radial-gradient(ellipse,#501010,#100707 65%,#090909)}
-.hero h1{font-size:clamp(42px,8vw,75px);color:#ef3030}
-.hero p{margin:20px auto;color:#ccc;font-size:18px}
-.btn{display:inline-block;background:#b91c1c;color:white;padding:14px 28px;border-radius:7px;text-decoration:none;font-weight:bold;margin-top:18px}
-section{padding:65px 8%;text-align:center}
-h2{font-size:32px;margin-bottom:30px}
-.packages{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px}
-.card{background:#151515;border:1px solid #481414;border-radius:13px;padding:30px;text-align:center}
-.card h3{font-size:27px;color:#ed3333;margin-bottom:15px}
-.card p{color:#bbb;line-height:1.8}
-.price{font-size:25px;margin:20px;color:white;font-weight:bold}
+html{scroll-behavior:smooth}
+body{
+ font-family:Arial,sans-serif;
+ background:#080808;color:white;
+ overflow-x:hidden
+}
+header{
+ padding:20px 8%;display:flex;
+ justify-content:space-between;align-items:center;
+ background:#101010;border-bottom:1px solid #6b1010;
+ position:sticky;top:0;z-index:10
+}
+.logo{font-size:28px;font-weight:900;color:#ed2929}
+nav a{color:#ddd;text-decoration:none;margin-left:18px}
+nav a:hover{color:#ff3333}
+.hero{
+ text-align:center;padding:110px 20px;
+ background:radial-gradient(ellipse at center,#641010,#190707 55%,#080808);
+ animation:glow 4s infinite alternate
+}
+@keyframes glow{
+ from{filter:brightness(.85)}
+ to{filter:brightness(1.2)}
+}
+.hero h1{font-size:clamp(45px,9vw,85px);color:#ff3030}
+.hero p{margin:18px auto;color:#ddd;font-size:18px}
+.btn{
+ display:inline-block;background:#c51e1e;color:white;
+ padding:14px 25px;border-radius:8px;
+ text-decoration:none;font-weight:bold;margin-top:18px;
+ border:1px solid #ff4545;cursor:pointer
+}
+.btn:hover{background:#ed3030;transform:translateY(-2px)}
+section{padding:70px 8%;text-align:center}
+h2{font-size:32px;margin-bottom:30px;color:#ff3737}
+.packages{
+ display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+ gap:25px
+}
+.card{
+ background:linear-gradient(145deg,#191919,#100808);
+ border:1px solid #701818;border-radius:15px;
+ padding:30px;text-align:center;
+ transition:.3s
+}
+.card:hover{transform:translateY(-7px);border-color:#ff3333}
+.card h3{font-size:29px;color:#ff3838;margin-bottom:15px}
+.card p{color:#ccc;line-height:1.9}
+.price{font-size:28px;margin:20px;font-weight:bold}
 .card .btn{width:100%}
 .info{background:#101010}
-footer{padding:28px;text-align:center;color:#777;border-top:1px solid #381010}
+.rules{
+ max-width:650px;margin:auto;text-align:left;
+ background:#171010;border:1px solid #641818;
+ border-radius:12px;padding:25px;line-height:2
+}
+.rules li{margin-left:22px;color:#ddd}
+.ip{
+ font-size:23px;color:#ff4545;font-weight:bold;
+ margin-top:20px
+}
+footer{
+ padding:30px;text-align:center;color:#888;
+ border-top:1px solid #501010
+}
+@media(max-width:600px){
+ header{flex-direction:column;gap:15px}
+ nav a{margin:0 7px;font-size:14px}
+ section{padding:50px 6%}
+}
 </style>
 </head>
+
 <body>
+
 <header>
-<div class="logo">DARKSMP</div>
-<nav>
-<a href="#home">Ana Sayfa</a>
-<a href="#ranks">Rütbeler</a>
-<a href="#info">Sunucu</a>
-</nav>
+ <div class="logo">DARKSMP</div>
+ <nav>
+  <a href="#home">Ana Sayfa</a>
+  <a href="#ranks">Rütbeler</a>
+  <a href="#basvuru">Başvurular</a>
+  <a href="#info">Sunucu</a>
+ </nav>
 </header>
 
 <div class="hero" id="home">
-<h1>DARKSMP</h1>
-<p>Karanlığın içinde kendi efsaneni yaz!</p>
-<p>Özel rütbeler ve DarkSMP topluluğu seni bekliyor.</p>
-<a class="btn" href="#ranks">Rütbeleri Keşfet</a>
+ <h1>DARKSMP</h1>
+ <p>Karanlığın içinde kendi efsaneni yaz!</p>
+ <p>Özel rütbeler ve büyük bir macera seni bekliyor.</p>
+ <a class="btn" href="#ranks">Rütbeleri Keşfet</a>
 </div>
 
 <section id="ranks">
-<h2>✦ ÖZEL RÜTBELER ✦</h2>
-<div class="packages">
-<div class="card">
-<h3>VIP</h3>
-<p>Özel VIP rütbesi<br>VIP ayrıcalıkları<br>Özel oyuncu avantajları</p>
-<div class="price">99 TL</div>
-<a class="btn" href="mailto:">Bilgi Al</a>
-</div>
-<div class="card">
-<h3>MVİP</h3>
-<p>Özel MVİP rütbesi<br>Üst düzey ayrıcalıklar<br>DarkSMP avantajları</p>
-<div class="price">149 TL</div>
-<a class="btn" href="mailto:">Bilgi Al</a>
-</div>
-</div>
+ <h2>✦ ÖZEL RÜTBELER ✦</h2>
+ <div class="packages">
+
+  <div class="card">
+   <h3>VIP</h3>
+   <p>Özel VIP rütbesi<br>VIP ayrıcalıkları<br>Özel oyuncu avantajları</p>
+   <div class="price">99 TL</div>
+   <a class="btn" href="#basvuru">Bilgi Al</a>
+  </div>
+
+  <div class="card">
+   <h3>MVİP</h3>
+   <p>Özel MVİP rütbesi<br>Üst düzey ayrıcalıklar<br>DarkSMP avantajları</p>
+   <div class="price">149 TL</div>
+   <a class="btn" href="#basvuru">Bilgi Al</a>
+  </div>
+
+ </div>
+</section>
+
+<section id="basvuru">
+ <h2>✦ EKİP BAŞVURULARI ✦</h2>
+ <div class="packages">
+
+  <div class="card">
+   <h3>REHBER</h3>
+   <p>Rehber olmak için TikTok hesabımıza yazabilirsiniz.</p>
+   <a class="btn" href="#tiktok">TikTok Hesabımız</a>
+  </div>
+
+  <div class="card">
+   <h3>MEDYA</h3>
+   <p>Medya ekibine katılmak için gerekenler:</p>
+   <div class="rules">
+    <ul>
+     <li>En az 1.000 takipçi</li>
+     <li>Videolar en az 500 izlenme almalı</li>
+     <li>5 günde en az 1 video paylaşılmalı</li>
+    </ul>
+   </div>
+   <a class="btn" href="#tiktok">Başvuru Bilgisi</a>
+  </div>
+
+ </div>
 </section>
 
 <section class="info" id="info">
-<h2>⚔ DARKSMP SUNUCUSU</h2>
-<p>DarkSMP ailesine katıl ve maceraya başla!</p>
-<p style="margin-top:15px">Sürüm: 1.21.11</p>
+ <h2>⚔ DARKSMP SUNUCUSU</h2>
+ <p>DarkSMP ailesine katıl ve maceraya başla!</p>
+ <p style="margin-top:15px">Sürüm: 1.21.11</p>
+
+ <div class="ip">dark.mcgiris.site</div>
+ <button class="btn" onclick="copyIP()">IP ADRESİNİ KOPYALA</button>
+ <p id="copyMessage" style="margin-top:12px;color:#ff5555"></p>
 </section>
 
-<footer>© 2026 DARKSMP — TÜM HAKLARI SAKLIDIR.</footer>
+<section id="tiktok">
+ <h2>✦ SOSYAL MEDYA ✦</h2>
+ <p>TikTok hesabımız yakında burada olacak!</p>
+</section>
+
+<footer>
+ © 2026 DARKSMP — TÜM HAKLARI SAKLIDIR.
+</footer>
+
+<script>
+function copyIP(){
+ navigator.clipboard.writeText("dark.mcgiris.site")
+ .then(()=>{
+  document.getElementById("copyMessage").textContent="IP kopyalandı!";
+ })
+ .catch(()=>{
+  document.getElementById("copyMessage").textContent="Kopyalama başarısız. IP: dark.mcgiris.site";
+ });
+}
+</script>
+
 </body>
 </html>
