@@ -4,83 +4,76 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DarkSMP | Resmi Mağaza</title>
-
+<title>DarkSMP | Resmî Mağaza</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
+*{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
+ background:#080808;color:#fff;
  font-family:Arial,sans-serif;
- background:#080808;color:white;
- overflow-x:hidden
 }
 header{
- padding:20px 8%;display:flex;
- justify-content:space-between;align-items:center;
- background:#101010;border-bottom:1px solid #6b1010;
- position:sticky;top:0;z-index:10
+ position:sticky;top:0;z-index:10;
+ display:flex;justify-content:space-between;
+ align-items:center;padding:20px 7%;
+ background:#100909;
+ border-bottom:1px solid #8b1717;
 }
-.logo{font-size:28px;font-weight:900;color:#ed2929}
-nav a{color:#ddd;text-decoration:none;margin-left:18px}
+.logo{font-size:28px;font-weight:900;color:#ff2929}
+nav{display:flex;gap:18px;flex-wrap:wrap}
+nav a{color:#ddd;text-decoration:none;font-size:14px}
 nav a:hover{color:#ff3333}
 .hero{
- text-align:center;padding:110px 20px;
- background:radial-gradient(ellipse at center,#641010,#190707 55%,#080808);
- animation:glow 4s infinite alternate
+ min-height:440px;display:flex;
+ flex-direction:column;justify-content:center;
+ align-items:center;text-align:center;padding:70px 20px;
+ background:radial-gradient(circle,#6b1010,#220707 50%,#080808 85%);
 }
-@keyframes glow{
- from{filter:brightness(.85)}
- to{filter:brightness(1.2)}
-}
-.hero h1{font-size:clamp(45px,9vw,85px);color:#ff3030}
-.hero p{margin:18px auto;color:#ddd;font-size:18px}
+.hero h1{font-size:clamp(48px,9vw,90px);color:#ff3030}
+.hero p{color:#ddd;margin-top:15px;font-size:18px}
 .btn{
- display:inline-block;background:#c51e1e;color:white;
- padding:14px 25px;border-radius:8px;
- text-decoration:none;font-weight:bold;margin-top:18px;
- border:1px solid #ff4545;cursor:pointer
+ display:inline-block;background:#bd2020;
+ color:white;text-decoration:none;border:1px solid #ff4848;
+ border-radius:8px;padding:13px 22px;
+ font-weight:bold;margin-top:18px;cursor:pointer;
 }
-.btn:hover{background:#ed3030;transform:translateY(-2px)}
-section{padding:70px 8%;text-align:center}
-h2{font-size:32px;margin-bottom:30px;color:#ff3737}
+.btn:hover{background:#ed3030}
+section{padding:65px 8%;text-align:center}
+h2{font-size:32px;color:#ff3939;margin-bottom:35px}
 .packages{
- display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
- gap:25px
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+ gap:22px;
 }
 .card{
- background:linear-gradient(145deg,#191919,#100808);
- border:1px solid #701818;border-radius:15px;
- padding:30px;text-align:center;
- transition:.3s
+ background:linear-gradient(145deg,#1b1b1b,#170808);
+ border:1px solid #641717;border-radius:15px;
+ padding:28px 22px;transition:.25s;
 }
-.card:hover{transform:translateY(-7px);border-color:#ff3333}
-.card h3{font-size:29px;color:#ff3838;margin-bottom:15px}
+.card:hover{transform:translateY(-6px);border-color:#ff3030}
+.card h3{font-size:26px;color:#ff3939;margin-bottom:15px}
 .card p{color:#ccc;line-height:1.9}
-.price{font-size:28px;margin:20px;font-weight:bold}
+.price{font-size:28px;font-weight:bold;margin-top:20px}
 .card .btn{width:100%}
-.info{background:#101010}
+.dark-section{background:#101010}
 .rules{
  max-width:650px;margin:auto;text-align:left;
- background:#171010;border:1px solid #641818;
- border-radius:12px;padding:25px;line-height:2
+ background:#171111;border:1px solid #601515;
+ border-radius:12px;padding:25px;line-height:2;
 }
 .rules li{margin-left:22px;color:#ddd}
-.ip{
- font-size:23px;color:#ff4545;font-weight:bold;
- margin-top:20px
-}
+.server-ip{font-size:25px;color:#ff4444;font-weight:bold;margin-top:20px}
 footer{
+ background:#090909;border-top:1px solid #511010;
  padding:30px;text-align:center;color:#888;
- border-top:1px solid #501010
 }
-@media(max-width:600px){
+@media(max-width:650px){
  header{flex-direction:column;gap:15px}
- nav a{margin:0 7px;font-size:14px}
- section{padding:50px 6%}
+ nav{justify-content:center}
+ section{padding:50px 5%}
 }
 </style>
 </head>
-
 <body>
 
 <header>
@@ -88,20 +81,21 @@ footer{
  <nav>
   <a href="#home">Ana Sayfa</a>
   <a href="#ranks">Rütbeler</a>
+  <a href="#ekstra">Özel Paketler</a>
   <a href="#basvuru">Başvurular</a>
-  <a href="#info">Sunucu</a>
+  <a href="#sunucu">Sunucu</a>
  </nav>
 </header>
 
 <div class="hero" id="home">
  <h1>DARKSMP</h1>
  <p>Karanlığın içinde kendi efsaneni yaz!</p>
- <p>Özel rütbeler ve büyük bir macera seni bekliyor.</p>
- <a class="btn" href="#ranks">Rütbeleri Keşfet</a>
+ <p>Rütbeler, özel ayrıcalıklar ve büyük bir topluluk.</p>
+ <a class="btn" href="#ranks">MAĞAZAYI KEŞFET</a>
 </div>
 
 <section id="ranks">
- <h2>✦ ÖZEL RÜTBELER ✦</h2>
+ <h2>✦ SUNUCU RÜTBELERİ ✦</h2>
  <div class="packages">
 
   <div class="card">
@@ -118,6 +112,34 @@ footer{
    <a class="btn" href="#basvuru">Bilgi Al</a>
   </div>
 
+  <div class="card">
+   <h3>MVİP+</h3>
+   <p>Özel MVİP+ rütbesi<br>Ekstra ayrıcalıklar<br>Üst düzey oyuncu deneyimi</p>
+   <div class="price">250 TL</div>
+   <a class="btn" href="#basvuru">Bilgi Al</a>
+  </div>
+
+ </div>
+</section>
+
+<section class="dark-section" id="ekstra">
+ <h2>✦ ÖZEL HİZMETLER ✦</h2>
+ <div class="packages">
+
+  <div class="card">
+   <h3>MODERATÖR ALIMI</h3>
+   <p>Moderatör başvurusu ve değerlendirme süreci.</p>
+   <div class="price">200 TL</div>
+   <a class="btn" href="#basvuru">Başvuru Bilgisi</a>
+  </div>
+
+  <div class="card">
+   <h3>SPONSOR</h3>
+   <p>DarkSMP sponsorluğu ve özel tanıtım desteği.</p>
+   <div class="price">150 TL</div>
+   <a class="btn" href="#basvuru">Bilgi Al</a>
+  </div>
+
  </div>
 </section>
 
@@ -127,8 +149,8 @@ footer{
 
   <div class="card">
    <h3>REHBER</h3>
-   <p>Rehber olmak için TikTok hesabımıza yazabilirsiniz.</p>
-   <a class="btn" href="#tiktok">TikTok Hesabımız</a>
+   <p>Rehber olmak için TikTok hesabımıza mesaj gönderin.</p>
+   <a class="btn" href="https://www.tiktok.com/@dark.mcgiris.site" target="_blank" rel="noopener">TikTok Hesabımız</a>
   </div>
 
   <div class="card">
@@ -141,39 +163,34 @@ footer{
      <li>5 günde en az 1 video paylaşılmalı</li>
     </ul>
    </div>
-   <a class="btn" href="#tiktok">Başvuru Bilgisi</a>
+   <a class="btn" href="https://www.tiktok.com/@dark.mcgiris.site" target="_blank" rel="noopener">Medya Başvurusu</a>
   </div>
 
  </div>
 </section>
 
-<section class="info" id="info">
+<section class="dark-section" id="sunucu">
  <h2>⚔ DARKSMP SUNUCUSU</h2>
  <p>DarkSMP ailesine katıl ve maceraya başla!</p>
- <p style="margin-top:15px">Sürüm: 1.21.11</p>
-
- <div class="ip">dark.mcgiris.site</div>
+ <p style="margin-top:12px">Minecraft Sürümü: 1.21.11</p>
+ <div class="server-ip">dark.mcgiris.site</div>
  <button class="btn" onclick="copyIP()">IP ADRESİNİ KOPYALA</button>
- <p id="copyMessage" style="margin-top:12px;color:#ff5555"></p>
-</section>
-
-<section id="tiktok">
- <h2>✦ SOSYAL MEDYA ✦</h2>
- <p>TikTok hesabımız yakında burada olacak!</p>
+ <p id="message" style="margin-top:12px;color:#ff5555"></p>
 </section>
 
 <footer>
- © 2026 DARKSMP — TÜM HAKLARI SAKLIDIR.
+ <p>© 2026 DARKSMP — TÜM HAKLARI SAKLIDIR.</p>
+ <p style="margin-top:10px">Resmî DarkSMP Mağazası</p>
 </footer>
 
 <script>
 function copyIP(){
  navigator.clipboard.writeText("dark.mcgiris.site")
  .then(()=>{
-  document.getElementById("copyMessage").textContent="IP kopyalandı!";
+  document.getElementById("message").textContent="Sunucu IP'si kopyalandı!";
  })
  .catch(()=>{
-  document.getElementById("copyMessage").textContent="Kopyalama başarısız. IP: dark.mcgiris.site";
+  document.getElementById("message").textContent="IP: dark.mcgiris.site";
  });
 }
 </script>
