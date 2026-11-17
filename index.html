@@ -1,4 +1,4 @@
-```html
+
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DarkSMP | Resmi Sunucu</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 :root {
   --red:#b51225;
@@ -31,6 +32,7 @@ header{
 nav{display:flex;gap:17px;flex-wrap:wrap}
 nav a{color:#ddd;text-decoration:none;font-size:14px}
 nav a:hover{color:#ff354c}
+
 .hero{
   min-height:430px;display:flex;align-items:center;
   justify-content:center;text-align:center;padding:60px 20px;
@@ -44,8 +46,10 @@ nav a:hover{color:#ff354c}
 section{padding:55px 0}
 .section-title{text-align:center;font-size:30px;margin:0 0 28px}
 .section-title span{color:var(--red)}
+
 .grid{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
   gap:18px;
 }
 .card,.panel{
@@ -55,16 +59,18 @@ section{padding:55px 0}
 .card{text-align:center}
 .card h3{font-size:21px;margin:8px 0}
 .price{font-size:27px;color:#ff354c;font-weight:bold;margin:15px}
-.muted{color:var(--muted);line-height:1.6}
+
 button,.button{
   display:inline-block;background:var(--red);color:white;
   border:0;border-radius:7px;padding:11px 17px;
   font-weight:bold;cursor:pointer;text-decoration:none;
+  transition:.2s;
 }
-button:hover,.button:hover{background:#e01b34}
+button:hover,.button:hover{filter:brightness(1.2)}
 button.secondary{background:#333}
 button.danger{background:#76202a}
 button:disabled{opacity:.5;cursor:not-allowed}
+
 input,select{
   width:100%;padding:12px;margin:7px 0 13px;
   background:#090909;color:#fff;border:1px solid #393939;
@@ -72,6 +78,7 @@ input,select{
 }
 input:focus{border-color:var(--red)}
 label{font-size:13px;color:#ccc}
+
 .auth-grid{
   display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
   gap:20px;
@@ -92,20 +99,121 @@ td{font-size:14px}
 .admin-row{background:#101010}
 .notice{font-size:13px;color:#aaa;line-height:1.5}
 #message{margin:12px 0;color:#ff6878;white-space:pre-wrap}
+
 .cart-item{
   display:flex;justify-content:space-between;align-items:center;
   gap:12px;padding:13px 0;border-bottom:1px solid var(--border);
 }
 .cart-total{font-size:24px;color:#ff5265;font-weight:bold;margin:20px 0}
+
+/* RÜTBE TASARIMLARI */
+
+.rank-card{
+  position:relative;
+  overflow:hidden;
+  transition:transform .25s,box-shadow .25s;
+}
+.rank-card:hover{
+  transform:translateY(-6px);
+}
+.rank-card h3{
+  font-size:24px;
+  letter-spacing:1px;
+}
+.rank-label{
+  font-size:11px;
+  letter-spacing:3px;
+  font-weight:bold;
+  margin-bottom:10px;
+  opacity:.8;
+}
+.rank-card .price{font-size:25px}
+.rank-card button{width:100%}
+
+/* SUPREME */
+.supreme{
+  background:linear-gradient(145deg,#17150b,#080808 75%);
+  border:1px solid #b99a24;
+  box-shadow:inset 0 0 25px #b99a2415;
+}
+.supreme h3,.supreme .rank-label{color:#e6c64c}
+.supreme .price{color:#e6c64c}
+.supreme button{
+  background:linear-gradient(90deg,#806716,#d5b33b);
+  color:#080808;
+}
+.supreme:hover{box-shadow:0 0 22px #b99a2460}
+
+/* IMMORTAL */
+.immortal{
+  background:linear-gradient(145deg,#29040b,#090909 75%);
+  border:1px solid #9c142c;
+  box-shadow:inset 0 0 30px #a000241c;
+}
+.immortal h3,.immortal .rank-label{color:#ff405b}
+.immortal .price{color:#ff405b}
+.immortal button{background:#850d24}
+.immortal:hover{box-shadow:0 0 22px #d0003850}
+
+/* LEGEND */
+.legend{
+  background:linear-gradient(145deg,#29200a,#090909 75%);
+  border:1px solid #d4af37;
+}
+.legend h3,.legend .rank-label{color:#f5d66d}
+.legend .price{color:#f5d66d}
+.legend button{background:linear-gradient(90deg,#9c781b,#e0bd4e);color:#100d04}
+.legend:hover{box-shadow:0 0 22px #d4af3760}
+
+/* NOVA */
+.nova{
+  background:linear-gradient(145deg,#210b39,#090909 75%);
+  border:1px solid #8438c8;
+  box-shadow:inset 0 0 30px #7e22ce20;
+}
+.nova h3,.nova .rank-label{color:#c58aff}
+.nova .price{color:#c58aff}
+.nova button{background:linear-gradient(90deg,#542080,#913ed0)}
+.nova:hover{box-shadow:0 0 24px #9c40e866}
+
+/* EMPEROR */
+.emperor{
+  background:linear-gradient(145deg,#091a36,#090909 75%);
+  border:1px solid #315b9b;
+}
+.emperor h3,.emperor .rank-label{color:#83b5ff}
+.emperor .price{color:#83b5ff}
+.emperor button{background:linear-gradient(90deg,#16396d,#326bb3)}
+.emperor:hover{box-shadow:0 0 22px #397dd966}
+
+/* DARK+ */
+.darkplus{
+  background:linear-gradient(145deg,#180307,#050505 65%,#210008);
+  border:1px solid #a71930;
+  box-shadow:inset 0 0 35px #a0002425;
+  animation:darkGlow 3s ease-in-out infinite alternate;
+}
+.darkplus h3,.darkplus .rank-label{color:#ff304d}
+.darkplus .price{color:#ff304d}
+.darkplus button{background:linear-gradient(90deg,#510713,#c20d2c)}
+.darkplus:hover{box-shadow:0 0 28px #ed153b80}
+
+@keyframes darkGlow{
+  from{box-shadow:inset 0 0 20px #a0002420,0 0 4px #a0002430}
+  to{box-shadow:inset 0 0 35px #a0002450,0 0 15px #c20d2c55}
+}
+
+footer{text-align:center;padding:28px;color:#888;border-top:1px solid var(--border)}
+
 @media(max-width:600px){
   header{justify-content:center}
   nav{justify-content:center}
   nav a{font-size:12px}
   .cart-item{align-items:flex-start;flex-direction:column}
 }
-footer{text-align:center;padding:28px;color:#888;border-top:1px solid var(--border)}
 </style>
 </head>
+
 <body>
 
 <header>
@@ -121,6 +229,7 @@ footer{text-align:center;padding:28px;color:#888;border-top:1px solid var(--bord
 </header>
 
 <main>
+
 <section class="hero" id="anasayfa">
   <div>
     <h1>DARK<span>SMP</span></h1>
@@ -132,150 +241,202 @@ footer{text-align:center;padding:28px;color:#888;border-top:1px solid var(--bord
 </section>
 
 <section id="rutbeler">
-  <div class="container">
-    <h2 class="section-title">SUNUCU <span>RÜTBELERİ</span></h2>
-    <div class="grid">
-      <div class="card">
-        <h3>VIP</h3>
-        <p class="muted">Özel VIP ayrıcalıkları</p>
-        <div class="price">150 PUAN</div>
-        <button onclick="addToCart('vip')">Sepete Ekle</button>
-      </div>
-      <div class="card">
-        <h3>MVIP</h3>
-        <p class="muted">Daha fazla ayrıcalık</p>
-        <div class="price">200 PUAN</div>
-        <button onclick="addToCart('mvip')">Sepete Ekle</button>
-      </div>
-      <div class="card">
-        <h3>MVIP+</h3>
-        <p class="muted">Üst seviye ayrıcalıklar</p>
-        <div class="price">250 PUAN</div>
-        <button onclick="addToCart('mvipplus')">Sepete Ekle</button>
-      </div>
-    </div>
-    <p class="notice" style="text-align:center;margin-top:18px">
-      Puan kazanmak için sunucuda oyna. Her 60 dakika için 1 puan kazanırsın.
-    </p>
-  </div>
+<div class="container">
+<h2 class="section-title">SUNUCU <span>RÜTBELERİ</span></h2>
+
+<div class="grid">
+
+<div class="card">
+  <h3>VIP</h3>
+  <p class="muted">Özel VIP ayrıcalıkları</p>
+  <div class="price">150 PUAN</div>
+  <button onclick="addToCart('vip')">Sepete Ekle</button>
+</div>
+
+<div class="card">
+  <h3>MVIP</h3>
+  <p class="muted">Daha fazla ayrıcalık</p>
+  <div class="price">200 PUAN</div>
+  <button onclick="addToCart('mvip')">Sepete Ekle</button>
+</div>
+
+<div class="card">
+  <h3>MVIP+</h3>
+  <p class="muted">Üst seviye ayrıcalıklar</p>
+  <div class="price">250 PUAN</div>
+  <button onclick="addToCart('mvipplus')">Sepete Ekle</button>
+</div>
+
+<div class="card rank-card supreme">
+  <div class="rank-label">GOLDEN ELITE</div>
+  <h3>SUPREME</h3>
+  <p class="muted">Altın ve siyahın gücü.</p>
+  <div class="price">250 PUAN</div>
+  <button onclick="addToCart('supreme')">Sepete Ekle</button>
+</div>
+
+<div class="card rank-card immortal">
+  <div class="rank-label">ETERNAL DARKNESS</div>
+  <h3>IMMORTAL</h3>
+  <p class="muted">Karanlığın içinden doğan güç.</p>
+  <div class="price">275 PUAN</div>
+  <button onclick="addToCart('immortal')">Sepete Ekle</button>
+</div>
+
+<div class="card rank-card legend">
+  <div class="rank-label">LEGENDARY</div>
+  <h3>LEGEND</h3>
+  <p class="muted">Altınla mühürlenmiş efsane.</p>
+  <div class="price">225 PUAN</div>
+  <button onclick="addToCart('legend')">Sepete Ekle</button>
+</div>
+
+<div class="card rank-card nova">
+  <div class="rank-label">COSMIC POWER</div>
+  <h3>NOVA</h3>
+  <p class="muted">Karanlıkta parlayan kozmik güç.</p>
+  <div class="price">300 PUAN</div>
+  <button onclick="addToCart('nova')">Sepete Ekle</button>
+</div>
+
+<div class="card rank-card emperor">
+  <div class="rank-label">ROYAL AUTHORITY</div>
+  <h3>EMPEROR</h3>
+  <p class="muted">Lacivert kraliyet ihtişamı.</p>
+  <div class="price">325 PUAN</div>
+  <button onclick="addToCart('emperor')">Sepete Ekle</button>
+</div>
+
+<div class="card rank-card darkplus">
+  <div class="rank-label">ULTIMATE DARKNESS</div>
+  <h3>DARK+</h3>
+  <p class="muted">Karanlığın en özel gücü.</p>
+  <div class="price">350 PUAN</div>
+  <button onclick="addToCart('dark')">Sepete Ekle</button>
+</div>
+
+</div>
+
+<p class="notice" style="text-align:center;margin-top:18px">
+  Sunucuda her 20 dakika için 1 puan kazanırsın.
+</p>
+</div>
 </section>
 
 <section id="paketler">
-  <div class="container">
-    <h2 class="section-title">DARKSMP <span>MAĞAZA SEPETİ</span></h2>
-    <div class="panel">
-      <h3>Sepetim</h3>
-      <p class="muted">Satın almak istediğin rütbeleri buradan yönetebilirsin.</p>
-      <div id="cartItems">Sepetin boş.</div>
-      <div class="cart-total">Toplam: <span id="cartTotal">0</span> PUAN</div>
-      <p class="muted">Mevcut puanın: <strong id="cartPlayerPoints">Giriş yapmalısın</strong></p>
-      <button id="purchaseButton" onclick="purchaseCart()">Puanla Satın Al</button>
-      <button class="secondary" onclick="clearCart()">Sepeti Temizle</button>
-      <div id="cartMessage" class="status hidden"></div>
-    </div>
-  </div>
+<div class="container">
+<h2 class="section-title">DARKSMP <span>MAĞAZA SEPETİ</span></h2>
+<div class="panel">
+<h3>Sepetim</h3>
+<p class="muted">Satın almak istediğin rütbeleri buradan yönetebilirsin.</p>
+<div id="cartItems">Sepetin boş.</div>
+<div class="cart-total">Toplam: <span id="cartTotal">0</span> PUAN</div>
+<p class="muted">Mevcut puanın: <strong id="cartPlayerPoints">Giriş yapmalısın</strong></p>
+<button id="purchaseButton" onclick="purchaseCart()">Puanla Satın Al</button>
+<button class="secondary" onclick="clearCart()">Sepeti Temizle</button>
+<div id="cartMessage" class="status hidden"></div>
+</div>
+</div>
 </section>
 
 <section id="basvurular">
-  <div class="container">
-    <h2 class="section-title">EKİBE <span>KATIL</span></h2>
-    <div class="grid">
-      <div class="card">
-        <h3>Rehber Başvurusu</h3>
-        <p class="muted">Sunucuda oyunculara yardımcı ol.</p>
-        <a class="button" target="_blank" rel="noopener" href="https://www.tiktok.com/@dark.mcgiris.site">Başvur</a>
-      </div>
-      <div class="card">
-        <h3>Medya Başvurusu</h3>
-        <p class="muted">DarkSMP içerik ekibine katıl.</p>
-        <a class="button" target="_blank" rel="noopener" href="https://www.tiktok.com/@dark.mcgiris.site">Başvur</a>
-      </div>
-    </div>
-  </div>
+<div class="container">
+<h2 class="section-title">EKİBE <span>KATIL</span></h2>
+<div class="grid">
+<div class="card">
+<h3>Rehber Başvurusu</h3>
+<p class="muted">Sunucuda oyunculara yardımcı ol.</p>
+<a class="button" target="_blank" rel="noopener" href="https://www.tiktok.com/@dark.mcgiris.site">Başvur</a>
+</div>
+<div class="card">
+<h3>Medya Başvurusu</h3>
+<p class="muted">DarkSMP içerik ekibine katıl.</p>
+<a class="button" target="_blank" rel="noopener" href="https://www.tiktok.com/@dark.mcgiris.site">Başvur</a>
+</div>
+</div>
+</div>
 </section>
 
 <section id="sunucu">
-  <div class="container">
-    <h2 class="section-title">SUNUCU <span>BİLGİLERİ</span></h2>
-    <div class="card">
-      <h3>DarkSMP Minecraft</h3>
-      <p>Sunucu adresi: <strong>dark.mcgiris.site</strong></p>
-      <p>Sürüm: <strong>1.21.11</strong></p>
-      <button onclick="copyIP()">IP'yi Kopyala</button>
-    </div>
-  </div>
+<div class="container">
+<h2 class="section-title">SUNUCU <span>BİLGİLERİ</span></h2>
+<div class="card">
+<h3>DarkSMP Minecraft</h3>
+<p>Sunucu adresi: <strong>dark.mcgiris.site</strong></p>
+<p>Sürüm: <strong>1.21.11</strong></p>
+<button onclick="copyIP()">IP'yi Kopyala</button>
+</div>
+</div>
 </section>
 
 <section id="oyuncu">
-  <div class="container">
-    <h2 class="section-title">OYUNCU <span>PANELİ</span></h2>
+<div class="container">
+<h2 class="section-title">OYUNCU <span>PANELİ</span></h2>
 
-    <div id="authArea" class="auth-grid">
-      <div class="panel">
-        <h3>Giriş Yap</h3>
-        <label>E-posta</label>
-        <input id="loginEmail" type="email" placeholder="E-posta adresin">
-        <label>Şifre</label>
-        <input id="loginPassword" type="password" placeholder="Şifren">
-        <button onclick="login()">Giriş Yap</button>
-      </div>
+<div id="authArea" class="auth-grid">
+<div class="panel">
+<h3>Giriş Yap</h3>
+<label>E-posta</label>
+<input id="loginEmail" type="email" placeholder="E-posta adresin">
+<label>Şifre</label>
+<input id="loginPassword" type="password" placeholder="Şifren">
+<button onclick="login()">Giriş Yap</button>
+</div>
 
-      <div class="panel">
-        <h3>Hesap Oluştur</h3>
-        <label>Minecraft kullanıcı adı</label>
-        <input id="registerMinecraft" placeholder="Minecraft adın" maxlength="16">
-        <label>E-posta</label>
-        <input id="registerEmail" type="email" placeholder="E-posta adresin">
-        <label>Şifre</label>
-        <input id="registerPassword" type="password" placeholder="En az 6 karakter">
-        <button onclick="register()">Kayıt Ol</button>
-      </div>
-    </div>
+<div class="panel">
+<h3>Hesap Oluştur</h3>
+<label>Minecraft kullanıcı adı</label>
+<input id="registerMinecraft" placeholder="Minecraft adın" maxlength="16">
+<label>E-posta</label>
+<input id="registerEmail" type="email" placeholder="E-posta adresin">
+<label>Şifre</label>
+<input id="registerPassword" type="password" placeholder="En az 6 karakter">
+<button onclick="register()">Kayıt Ol</button>
+</div>
+</div>
 
-    <div id="message"></div>
+<div id="message"></div>
 
-    <div id="playerArea" class="panel hidden">
-      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
-        <h3>Oyuncu Panelin</h3>
-        <button class="secondary" onclick="logout()">Çıkış Yap</button>
-      </div>
-      <p>Minecraft: <strong id="playerMinecraft">-</strong></p>
-      <div id="approvalStatus" class="status">Hesap durumu kontrol ediliyor...</div>
-      <div class="stat-grid">
-        <div class="stat">Puan<strong id="playerPoints">0</strong></div>
-        <div class="stat">Toplam süre<strong id="playerMinutes">0 dakika</strong></div>
-      </div>
-      <button onclick="refreshPlayer()">Yenile</button>
-    </div>
+<div id="playerArea" class="panel hidden">
+<div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
+<h3>Oyuncu Panelin</h3>
+<button class="secondary" onclick="logout()">Çıkış Yap</button>
+</div>
+<p>Minecraft: <strong id="playerMinecraft">-</strong></p>
+<div id="approvalStatus" class="status">Hesap durumu kontrol ediliyor...</div>
+<div class="stat-grid">
+<div class="stat">Puan<strong id="playerPoints">0</strong></div>
+<div class="stat">Toplam süre<strong id="playerMinutes">0 dakika</strong></div>
+</div>
+<button onclick="refreshPlayer()">Yenile</button>
+</div>
 
-    <div id="adminArea" class="panel hidden" style="margin-top:20px">
-      <h3 style="color:#ff5265">YÖNETİCİ PANELİ</h3>
-      <p class="muted">Oyuncu hesaplarını buradan yönetebilirsin.</p>
-      <button onclick="loadPlayers()">Oyuncuları Yenile</button>
-      <div id="adminMessage" class="notice"></div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Minecraft</th>
-              <th>Onay</th>
-              <th>Puan</th>
-              <th>Süre</th>
-              <th>İşlem</th>
-            </tr>
-          </thead>
-          <tbody id="playersTable">
-            <tr><td colspan="5">Oyuncular yükleniyor...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+<div id="adminArea" class="panel hidden" style="margin-top:20px">
+<h3 style="color:#ff5265">YÖNETİCİ PANELİ</h3>
+<p class="muted">Oyuncu hesaplarını buradan yönetebilirsin.</p>
+<button onclick="loadPlayers()">Oyuncuları Yenile</button>
+<div id="adminMessage" class="notice"></div>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Minecraft</th><th>Onay</th><th>Puan</th><th>Süre</th><th>İşlem</th>
+</tr>
+</thead>
+<tbody id="playersTable">
+<tr><td colspan="5">Oyuncular yükleniyor...</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+</div>
 </section>
+
 </main>
 
 <footer>
-  © 2026 DarkSMP - Tüm hakları saklıdır.
+© 2026 DarkSMP - Tüm hakları saklıdır.
 </footer>
 
 <script>
@@ -292,7 +453,14 @@ let cart = [];
 const products = {
   vip: { name: "VIP", price: 150 },
   mvip: { name: "MVIP", price: 200 },
-  mvipplus: { name: "MVIP+", price: 250 }
+  mvipplus: { name: "MVIP+", price: 250 },
+
+  supreme: { name: "SUPREME", price: 250 },
+  immortal: { name: "IMMORTAL", price: 275 },
+  legend: { name: "LEGEND", price: 225 },
+  nova: { name: "NOVA", price: 300 },
+  emperor: { name: "EMPEROR", price: 325 },
+  dark: { name: "DARK+", price: 350 }
 };
 
 function showMessage(message, isError = true) {
@@ -316,6 +484,7 @@ function copyIP() {
 
 function addToCart(code) {
   if (!products[code]) return;
+
   if (cart.length >= 10) {
     return showCartMessage("Sepette en fazla 10 ürün olabilir.");
   }
@@ -379,9 +548,11 @@ async function register() {
   if (!minecraft || !email || !password) {
     return showMessage("Lütfen tüm alanları doldur.");
   }
+
   if (!/^[A-Za-z0-9_]{3,16}$/.test(minecraft)) {
     return showMessage("Minecraft adı 3-16 karakter olmalı; harf, rakam ve _ kullanabilirsin.");
   }
+
   if (password.length < 6) {
     return showMessage("Şifre en az 6 karakter olmalı.");
   }
@@ -425,9 +596,11 @@ async function logout() {
   currentUser = null;
   isAdmin = false;
   currentPlayer = null;
+
   document.getElementById("authArea").classList.remove("hidden");
   document.getElementById("playerArea").classList.add("hidden");
   document.getElementById("adminArea").classList.add("hidden");
+
   renderCart();
   showMessage("Çıkış yapıldı.", false);
 }
@@ -515,6 +688,7 @@ async function purchaseCart() {
 
     cart = [];
     renderCart();
+
     showCartMessage(
       "Satın alma başarılı! " + data.total +
       " puan harcandı. Rütbelerin sunucuya gönderilecek.",
@@ -560,6 +734,7 @@ async function loadPlayers() {
 
   const tbody = document.getElementById("playersTable");
   const adminMessage = document.getElementById("adminMessage");
+
   tbody.innerHTML = '<tr><td colspan="5">Yükleniyor...</td></tr>';
 
   const { data, error } = await db
@@ -661,22 +836,26 @@ db.auth.onAuthStateChange((event, session) => {
     currentUser = null;
     isAdmin = false;
     currentPlayer = null;
+
     document.getElementById("authArea").classList.remove("hidden");
     document.getElementById("playerArea").classList.add("hidden");
     document.getElementById("adminArea").classList.add("hidden");
+
     renderCart();
   }
 });
 
 (async function init() {
   renderCart();
+
   const { data } = await db.auth.getSession();
+
   if (data.session?.user) {
     currentUser = data.session.user;
     await refreshSession();
   }
 })();
 </script>
+
 </body>
 </html>
-```
