@@ -1,4 +1,4 @@
-
+```html
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -64,6 +64,7 @@ button,.button{
 button:hover,.button:hover{background:#e01b34}
 button.secondary{background:#333}
 button.danger{background:#76202a}
+button:disabled{opacity:.5;cursor:not-allowed}
 input,select{
   width:100%;padding:12px;margin:7px 0 13px;
   background:#090909;color:#fff;border:1px solid #393939;
@@ -84,20 +85,25 @@ label{font-size:13px;color:#ccc}
 .stat{background:#090909;border:1px solid var(--border);padding:16px;border-radius:9px}
 .stat strong{display:block;color:#ff354c;font-size:23px;margin-top:7px}
 .table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;min-width:650px}
+table{width:100%;border-collapse:collapse;min-width:550px}
 th,td{padding:12px;border-bottom:1px solid var(--border);text-align:left}
 th{color:#ff5265}
 td{font-size:14px}
 .admin-row{background:#101010}
-.small-input{max-width:100px}
-footer{text-align:center;padding:28px;color:#888;border-top:1px solid var(--border)}
 .notice{font-size:13px;color:#aaa;line-height:1.5}
 #message{margin:12px 0;color:#ff6878;white-space:pre-wrap}
+.cart-item{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:12px;padding:13px 0;border-bottom:1px solid var(--border);
+}
+.cart-total{font-size:24px;color:#ff5265;font-weight:bold;margin:20px 0}
 @media(max-width:600px){
   header{justify-content:center}
   nav{justify-content:center}
   nav a{font-size:12px}
+  .cart-item{align-items:flex-start;flex-direction:column}
 }
+footer{text-align:center;padding:28px;color:#888;border-top:1px solid var(--border)}
 </style>
 </head>
 <body>
@@ -107,7 +113,7 @@ footer{text-align:center;padding:28px;color:#888;border-top:1px solid var(--bord
   <nav>
     <a href="#anasayfa">Ana Sayfa</a>
     <a href="#rutbeler">Rütbeler</a>
-    <a href="#paketler">Paketler</a>
+    <a href="#paketler">Mağaza</a>
     <a href="#basvurular">Başvurular</a>
     <a href="#sunucu">Sunucu</a>
     <a href="#oyuncu">Oyuncu Paneli</a>
@@ -129,20 +135,43 @@ footer{text-align:center;padding:28px;color:#888;border-top:1px solid var(--bord
   <div class="container">
     <h2 class="section-title">SUNUCU <span>RÜTBELERİ</span></h2>
     <div class="grid">
-      <div class="card"><h3>VIP</h3><p class="muted">Özel VIP ayrıcalıkları</p><div class="price">99 TL</div></div>
-      <div class="card"><h3>MVİP</h3><p class="muted">Daha fazla ayrıcalık</p><div class="price">149 TL</div></div>
-      <div class="card"><h3>MVİP+</h3><p class="muted">Üst seviye ayrıcalıklar</p><div class="price">250 TL</div></div>
+      <div class="card">
+        <h3>VIP</h3>
+        <p class="muted">Özel VIP ayrıcalıkları</p>
+        <div class="price">150 PUAN</div>
+        <button onclick="addToCart('vip')">Sepete Ekle</button>
+      </div>
+      <div class="card">
+        <h3>MVIP</h3>
+        <p class="muted">Daha fazla ayrıcalık</p>
+        <div class="price">200 PUAN</div>
+        <button onclick="addToCart('mvip')">Sepete Ekle</button>
+      </div>
+      <div class="card">
+        <h3>MVIP+</h3>
+        <p class="muted">Üst seviye ayrıcalıklar</p>
+        <div class="price">250 PUAN</div>
+        <button onclick="addToCart('mvipplus')">Sepete Ekle</button>
+      </div>
     </div>
-    <p class="notice" style="text-align:center;margin-top:18px">Satın alma işlemleri için sunucu yönetimiyle iletişime geç.</p>
+    <p class="notice" style="text-align:center;margin-top:18px">
+      Puan kazanmak için sunucuda oyna. Her 60 dakika için 1 puan kazanırsın.
+    </p>
   </div>
 </section>
 
 <section id="paketler">
   <div class="container">
-    <h2 class="section-title">ÖZEL <span>PAKETLER</span></h2>
-    <div class="grid">
-      <div class="card"><h3>Moderatör Başvurusu</h3><p class="muted">Moderatör alım paketi</p><div class="price">200 TL</div></div>
-      <div class="card"><h3>Sponsor</h3><p class="muted">Sunucu sponsorluk paketi</p><div class="price">150 TL</div></div>
+    <h2 class="section-title">DARKSMP <span>MAĞAZA SEPETİ</span></h2>
+    <div class="panel">
+      <h3>Sepetim</h3>
+      <p class="muted">Satın almak istediğin rütbeleri buradan yönetebilirsin.</p>
+      <div id="cartItems">Sepetin boş.</div>
+      <div class="cart-total">Toplam: <span id="cartTotal">0</span> PUAN</div>
+      <p class="muted">Mevcut puanın: <strong id="cartPlayerPoints">Giriş yapmalısın</strong></p>
+      <button id="purchaseButton" onclick="purchaseCart()">Puanla Satın Al</button>
+      <button class="secondary" onclick="clearCart()">Sepeti Temizle</button>
+      <div id="cartMessage" class="status hidden"></div>
     </div>
   </div>
 </section>
@@ -215,7 +244,6 @@ footer{text-align:center;padding:28px;color:#888;border-top:1px solid var(--bord
       <div class="stat-grid">
         <div class="stat">Puan<strong id="playerPoints">0</strong></div>
         <div class="stat">Toplam süre<strong id="playerMinutes">0 dakika</strong></div>
-        <div class="stat">Bakiye<strong id="playerBalance">0.00 TL</strong></div>
       </div>
       <button onclick="refreshPlayer()">Yenile</button>
     </div>
@@ -232,13 +260,12 @@ footer{text-align:center;padding:28px;color:#888;border-top:1px solid var(--bord
               <th>Minecraft</th>
               <th>Onay</th>
               <th>Puan</th>
-              <th>Bakiye</th>
               <th>Süre</th>
               <th>İşlem</th>
             </tr>
           </thead>
           <tbody id="playersTable">
-            <tr><td colspan="6">Oyuncular yükleniyor...</td></tr>
+            <tr><td colspan="5">Oyuncular yükleniyor...</td></tr>
           </tbody>
         </table>
       </div>
@@ -260,9 +287,23 @@ const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let currentUser = null;
 let isAdmin = false;
 let currentPlayer = null;
+let cart = [];
+
+const products = {
+  vip: { name: "VIP", price: 150 },
+  mvip: { name: "MVIP", price: 200 },
+  mvipplus: { name: "MVIP+", price: 250 }
+};
 
 function showMessage(message, isError = true) {
   const el = document.getElementById("message");
+  el.style.color = isError ? "#ff6878" : "#72df9b";
+  el.textContent = message;
+}
+
+function showCartMessage(message, isError = true) {
+  const el = document.getElementById("cartMessage");
+  el.classList.remove("hidden");
   el.style.color = isError ? "#ff6878" : "#72df9b";
   el.textContent = message;
 }
@@ -271,6 +312,63 @@ function copyIP() {
   navigator.clipboard.writeText("dark.mcgiris.site")
     .then(() => alert("Sunucu IP'si kopyalandı!"))
     .catch(() => alert("Sunucu IP'si: dark.mcgiris.site"));
+}
+
+function addToCart(code) {
+  if (!products[code]) return;
+  if (cart.length >= 10) {
+    return showCartMessage("Sepette en fazla 10 ürün olabilir.");
+  }
+
+  cart.push(code);
+  renderCart();
+  showCartMessage(products[code].name + " sepete eklendi.", false);
+}
+
+function removeFromCart(index) {
+  if (index < 0 || index >= cart.length) return;
+  cart.splice(index, 1);
+  renderCart();
+}
+
+function clearCart() {
+  cart = [];
+  renderCart();
+  showCartMessage("Sepet temizlendi.", false);
+}
+
+function renderCart() {
+  const container = document.getElementById("cartItems");
+  const totalElement = document.getElementById("cartTotal");
+
+  container.innerHTML = "";
+
+  if (!cart.length) {
+    container.textContent = "Sepetin boş.";
+  } else {
+    cart.forEach((code, index) => {
+      const product = products[code];
+      const row = document.createElement("div");
+      row.className = "cart-item";
+
+      const info = document.createElement("span");
+      info.textContent = product.name + " - " + product.price + " puan";
+
+      const remove = document.createElement("button");
+      remove.className = "danger";
+      remove.textContent = "Sepetten Çıkar";
+      remove.onclick = () => removeFromCart(index);
+
+      row.append(info, remove);
+      container.appendChild(row);
+    });
+  }
+
+  const total = cart.reduce((sum, code) => sum + products[code].price, 0);
+  totalElement.textContent = total;
+
+  document.getElementById("cartPlayerPoints").textContent =
+    currentPlayer ? currentPlayer.points + " puan" : "Giriş yapmalısın";
 }
 
 async function register() {
@@ -330,6 +428,7 @@ async function logout() {
   document.getElementById("authArea").classList.remove("hidden");
   document.getElementById("playerArea").classList.add("hidden");
   document.getElementById("adminArea").classList.add("hidden");
+  renderCart();
   showMessage("Çıkış yapıldı.", false);
 }
 
@@ -344,7 +443,7 @@ async function refreshPlayer() {
 
   const { data, error } = await db
     .from("players")
-    .select("id,minecraft_username,approved,total_minutes,points,balance")
+    .select("id,minecraft_username,approved,total_minutes,points")
     .eq("user_id", currentUser.id)
     .maybeSingle();
 
@@ -359,15 +458,77 @@ async function refreshPlayer() {
   document.getElementById("playerMinecraft").textContent = data.minecraft_username || "-";
   document.getElementById("playerPoints").textContent = data.points ?? 0;
   document.getElementById("playerMinutes").textContent = (data.total_minutes ?? 0) + " dakika";
-  document.getElementById("playerBalance").textContent =
-    Number(data.balance ?? 0).toFixed(2) + " TL";
 
   const status = document.getElementById("approvalStatus");
   status.textContent = data.approved
     ? "Hesabın onaylandı. Sunucuya hoş geldin!"
     : "Hesabın yönetici onayı bekliyor.";
 
+  renderCart();
   await checkAdmin();
+}
+
+async function purchaseCart() {
+  if (!currentUser) {
+    return showCartMessage("Satın almak için önce giriş yapmalısın.");
+  }
+
+  if (!currentPlayer) {
+    return showCartMessage("Oyuncu bilgilerin yüklenemedi.");
+  }
+
+  if (!currentPlayer.approved) {
+    return showCartMessage("Hesabın henüz yönetici tarafından onaylanmamış.");
+  }
+
+  if (!cart.length) {
+    return showCartMessage("Sepetin boş.");
+  }
+
+  const total = cart.reduce((sum, code) => sum + products[code].price, 0);
+
+  if (Number(currentPlayer.points) < total) {
+    return showCartMessage(
+      "Yetersiz puan! Gerekli: " + total +
+      " | Mevcut: " + currentPlayer.points
+    );
+  }
+
+  const button = document.getElementById("purchaseButton");
+  button.disabled = true;
+  button.textContent = "Satın alınıyor...";
+
+  try {
+    const { data, error } = await db.rpc("purchase_rank_cart", {
+      p_ranks: [...cart]
+    });
+
+    if (error) {
+      showCartMessage(error.message);
+      return;
+    }
+
+    if (!data || !data.success) {
+      showCartMessage(data?.message || "Satın alma tamamlanamadı.");
+      return;
+    }
+
+    cart = [];
+    renderCart();
+    showCartMessage(
+      "Satın alma başarılı! " + data.total +
+      " puan harcandı. Rütbelerin sunucuya gönderilecek.",
+      false
+    );
+
+    await refreshPlayer();
+
+  } catch (error) {
+    showCartMessage("Bir hata oluştu: " + error.message);
+  } finally {
+    button.disabled = false;
+    button.textContent = "Puanla Satın Al";
+  }
 }
 
 async function checkAdmin() {
@@ -399,11 +560,11 @@ async function loadPlayers() {
 
   const tbody = document.getElementById("playersTable");
   const adminMessage = document.getElementById("adminMessage");
-  tbody.innerHTML = '<tr><td colspan="6">Yükleniyor...</td></tr>';
+  tbody.innerHTML = '<tr><td colspan="5">Yükleniyor...</td></tr>';
 
   const { data, error } = await db
     .from("players")
-    .select("id,minecraft_username,approved,points,balance,total_minutes")
+    .select("id,minecraft_username,approved,points,total_minutes")
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -415,7 +576,7 @@ async function loadPlayers() {
   adminMessage.textContent = "Toplam oyuncu: " + data.length;
 
   if (!data.length) {
-    tbody.innerHTML = '<tr><td colspan="6">Henüz oyuncu yok.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="5">Henüz oyuncu yok.</td></tr>';
     return;
   }
 
@@ -434,13 +595,11 @@ async function loadPlayers() {
     const points = document.createElement("td");
     points.textContent = player.points ?? 0;
 
-    const balance = document.createElement("td");
-    balance.textContent = Number(player.balance ?? 0).toFixed(2) + " TL";
-
     const minutes = document.createElement("td");
     minutes.textContent = (player.total_minutes ?? 0) + " dk";
 
     const actions = document.createElement("td");
+
     const approveBtn = document.createElement("button");
     approveBtn.textContent = player.approved ? "Onayı Kaldır" : "Onayla";
     approveBtn.className = player.approved ? "danger" : "";
@@ -452,16 +611,10 @@ async function loadPlayers() {
     pointsBtn.textContent = "Puan";
     pointsBtn.className = "secondary";
     pointsBtn.style.margin = "5px";
-    pointsBtn.onclick = () => editNumber(player.id, "points", "Yeni puan miktarı:");
+    pointsBtn.onclick = () => editPoints(player.id);
 
-    const balanceBtn = document.createElement("button");
-    balanceBtn.textContent = "Bakiye";
-    balanceBtn.className = "secondary";
-    balanceBtn.style.margin = "5px";
-    balanceBtn.onclick = () => editNumber(player.id, "balance", "Yeni TL bakiyesi:");
-
-    actions.append(approveBtn, pointsBtn, balanceBtn);
-    tr.append(name, approval, points, balance, minutes, actions);
+    actions.append(approveBtn, pointsBtn);
+    tr.append(name, approval, points, minutes, actions);
     tbody.appendChild(tr);
   });
 }
@@ -481,27 +634,19 @@ async function updatePlayer(id, changes) {
   await refreshPlayer();
 }
 
-async function editNumber(id, field, promptText) {
+async function editPoints(id) {
   if (!isAdmin) return;
 
-  const answer = prompt(promptText);
+  const answer = prompt("Yeni puan miktarı:");
   if (answer === null || answer.trim() === "") return;
 
-  const number = Number(answer.replace(",", "."));
+  const number = Number(answer);
 
-  if (!Number.isFinite(number) || number < 0) {
-    return showAdminMessage("0 veya daha büyük geçerli bir sayı gir.");
+  if (!Number.isInteger(number) || number < 0) {
+    return showAdminMessage("0 veya daha büyük tam sayı gir.");
   }
 
-  if (field === "points" && !Number.isInteger(number)) {
-    return showAdminMessage("Puan tam sayı olmalı.");
-  }
-
-  if (field === "balance" && number > 1000000000) {
-    return showAdminMessage("Bakiye sınırı aşıldı.");
-  }
-
-  await updatePlayer(id, { [field]: number });
+  await updatePlayer(id, { points: number });
 }
 
 function showAdminMessage(message) {
@@ -515,13 +660,16 @@ db.auth.onAuthStateChange((event, session) => {
   } else {
     currentUser = null;
     isAdmin = false;
+    currentPlayer = null;
     document.getElementById("authArea").classList.remove("hidden");
     document.getElementById("playerArea").classList.add("hidden");
     document.getElementById("adminArea").classList.add("hidden");
+    renderCart();
   }
 });
 
 (async function init() {
+  renderCart();
   const { data } = await db.auth.getSession();
   if (data.session?.user) {
     currentUser = data.session.user;
@@ -531,3 +679,4 @@ db.auth.onAuthStateChange((event, session) => {
 </script>
 </body>
 </html>
+```
