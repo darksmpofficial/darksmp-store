@@ -6,856 +6,911 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DarkSMP | Resmi Sunucu</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
 :root {
   --red:#b51225;
-  --dark:#090909;
+  --red2:#e3263d;
+  --bg:#090909;
   --panel:#151515;
-  --border:#292929;
+  --panel2:#1d1d1d;
+  --border:#303030;
+  --text:#f5f5f5;
   --muted:#aaa;
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  margin:0;background:var(--dark);color:#fff;
-  font-family:Arial,Helvetica,sans-serif;
-}
-header{
-  position:sticky;top:0;z-index:10;
-  background:#090909ed;border-bottom:1px solid var(--border);
-  padding:15px 5%;display:flex;align-items:center;
-  justify-content:space-between;gap:15px;flex-wrap:wrap;
-}
-.logo{font-size:25px;font-weight:900;color:#fff}
-.logo span{color:var(--red)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
+header{position:sticky;top:0;z-index:20;background:#101010ee;border-bottom:1px solid var(--border);padding:15px 5%;display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}
+.logo{font-size:25px;font-weight:900;color:var(--red)}
 nav{display:flex;gap:17px;flex-wrap:wrap}
-nav a{color:#ddd;text-decoration:none;font-size:14px}
-nav a:hover{color:#ff354c}
-
-.hero{
-  min-height:430px;display:flex;align-items:center;
-  justify-content:center;text-align:center;padding:60px 20px;
-  background:linear-gradient(120deg,#160307,#090909 60%,#25050b);
-  border-bottom:1px solid var(--border);
-}
-.hero h1{font-size:clamp(42px,8vw,75px);margin:0 0 12px}
-.hero h1 span{color:var(--red)}
-.hero p{color:#bbb;font-size:17px}
-.container{width:min(1100px,92%);margin:auto}
-section{padding:55px 0}
-.section-title{text-align:center;font-size:30px;margin:0 0 28px}
-.section-title span{color:var(--red)}
-
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:18px;
-}
-.card,.panel{
-  background:var(--panel);border:1px solid var(--border);
-  border-radius:13px;padding:22px;
-}
-.card{text-align:center}
-.card h3{font-size:21px;margin:8px 0}
-.price{font-size:27px;color:#ff354c;font-weight:bold;margin:15px}
-
-button,.button{
-  display:inline-block;background:var(--red);color:white;
-  border:0;border-radius:7px;padding:11px 17px;
-  font-weight:bold;cursor:pointer;text-decoration:none;
-  transition:.2s;
-}
-button:hover,.button:hover{filter:brightness(1.2)}
-button.secondary{background:#333}
-button.danger{background:#76202a}
+a{color:white;text-decoration:none}
+nav a:hover{color:var(--red2)}
+button{border:0;border-radius:8px;background:var(--red);color:white;padding:11px 16px;font-weight:bold;cursor:pointer}
+button:hover{background:var(--red2)}
 button:disabled{opacity:.5;cursor:not-allowed}
-
-input,select{
-  width:100%;padding:12px;margin:7px 0 13px;
-  background:#090909;color:#fff;border:1px solid #393939;
-  border-radius:7px;outline:none;
-}
-input:focus{border-color:var(--red)}
-label{font-size:13px;color:#ccc}
-
-.auth-grid{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:20px;
-}
+button.secondary{background:#333}
+button.danger{background:#7e1825}
+input,textarea,select{width:100%;padding:12px;margin:7px 0 14px;background:#0d0d0d;color:white;border:1px solid #444;border-radius:7px}
+textarea{min-height:100px;resize:vertical}
+label{font-size:13px;color:#ddd}
+.hero{padding:90px 20px;text-align:center;background:linear-gradient(#0009,#000e),radial-gradient(circle at center,#50101a,#090909 65%)}
+.hero h1{font-size:clamp(35px,7vw,65px);margin:0 0 15px}
+.hero h1 span{color:var(--red2)}
+.hero p{color:#ccc;font-size:17px}
+section{padding:45px 5%;max-width:1250px;margin:auto}
+.section-title{text-align:center;font-size:30px;margin:0 0 28px}
+.section-title span{color:var(--red2)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:17px}
+.card,.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px}
+.card{text-align:center}
+.card h3{font-size:22px;color:var(--red2)}
+.price{font-size:25px;font-weight:bold;margin:15px}
+.muted{color:var(--muted)}
+.panel{margin:18px 0}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.stat{background:#0d0d0d;border:1px solid var(--border);border-radius:9px;padding:15px}
+.stat strong{display:block;font-size:23px;color:var(--red2);margin-top:7px}
 .hidden{display:none!important}
-.status{padding:12px;border-radius:7px;background:#252525;margin:12px 0}
-.stat-grid{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
-  gap:12px;margin:18px 0;
-}
-.stat{background:#090909;border:1px solid var(--border);padding:16px;border-radius:9px}
-.stat strong{display:block;color:#ff354c;font-size:23px;margin-top:7px}
+.notice{padding:12px;border-radius:8px;background:#242424;margin:12px 0;color:#ddd}
+.success{border-left:4px solid #35a66b}
+.error{border-left:4px solid var(--red)}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+.application-card{border:1px solid var(--border);background:#111;border-radius:10px;padding:17px}
+.application-card h3{margin-top:0}
+.status{display:inline-block;padding:5px 9px;border-radius:6px;background:#333;font-size:12px}
+.status.pending{background:#6b5014}
+.status.approved{background:#17653d}
+.status.rejected{background:#751c2a}
+table{width:100%;border-collapse:collapse;min-width:650px}
+th,td{padding:11px;border-bottom:1px solid var(--border);text-align:left}
 .table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;min-width:550px}
-th,td{padding:12px;border-bottom:1px solid var(--border);text-align:left}
-th{color:#ff5265}
-td{font-size:14px}
-.admin-row{background:#101010}
-.notice{font-size:13px;color:#aaa;line-height:1.5}
-#message{margin:12px 0;color:#ff6878;white-space:pre-wrap}
-
-.cart-item{
-  display:flex;justify-content:space-between;align-items:center;
-  gap:12px;padding:13px 0;border-bottom:1px solid var(--border);
-}
-.cart-total{font-size:24px;color:#ff5265;font-weight:bold;margin:20px 0}
-
-/* RÜTBE TASARIMLARI */
-
-.rank-card{
-  position:relative;
-  overflow:hidden;
-  transition:transform .25s,box-shadow .25s;
-}
-.rank-card:hover{
-  transform:translateY(-6px);
-}
-.rank-card h3{
-  font-size:24px;
-  letter-spacing:1px;
-}
-.rank-label{
-  font-size:11px;
-  letter-spacing:3px;
-  font-weight:bold;
-  margin-bottom:10px;
-  opacity:.8;
-}
-.rank-card .price{font-size:25px}
-.rank-card button{width:100%}
-
-/* SUPREME */
-.supreme{
-  background:linear-gradient(145deg,#17150b,#080808 75%);
-  border:1px solid #b99a24;
-  box-shadow:inset 0 0 25px #b99a2415;
-}
-.supreme h3,.supreme .rank-label{color:#e6c64c}
-.supreme .price{color:#e6c64c}
-.supreme button{
-  background:linear-gradient(90deg,#806716,#d5b33b);
-  color:#080808;
-}
-.supreme:hover{box-shadow:0 0 22px #b99a2460}
-
-/* IMMORTAL */
-.immortal{
-  background:linear-gradient(145deg,#29040b,#090909 75%);
-  border:1px solid #9c142c;
-  box-shadow:inset 0 0 30px #a000241c;
-}
-.immortal h3,.immortal .rank-label{color:#ff405b}
-.immortal .price{color:#ff405b}
-.immortal button{background:#850d24}
-.immortal:hover{box-shadow:0 0 22px #d0003850}
-
-/* LEGEND */
-.legend{
-  background:linear-gradient(145deg,#29200a,#090909 75%);
-  border:1px solid #d4af37;
-}
-.legend h3,.legend .rank-label{color:#f5d66d}
-.legend .price{color:#f5d66d}
-.legend button{background:linear-gradient(90deg,#9c781b,#e0bd4e);color:#100d04}
-.legend:hover{box-shadow:0 0 22px #d4af3760}
-
-/* NOVA */
-.nova{
-  background:linear-gradient(145deg,#210b39,#090909 75%);
-  border:1px solid #8438c8;
-  box-shadow:inset 0 0 30px #7e22ce20;
-}
-.nova h3,.nova .rank-label{color:#c58aff}
-.nova .price{color:#c58aff}
-.nova button{background:linear-gradient(90deg,#542080,#913ed0)}
-.nova:hover{box-shadow:0 0 24px #9c40e866}
-
-/* EMPEROR */
-.emperor{
-  background:linear-gradient(145deg,#091a36,#090909 75%);
-  border:1px solid #315b9b;
-}
-.emperor h3,.emperor .rank-label{color:#83b5ff}
-.emperor .price{color:#83b5ff}
-.emperor button{background:linear-gradient(90deg,#16396d,#326bb3)}
-.emperor:hover{box-shadow:0 0 22px #397dd966}
-
-/* DARK+ */
-.darkplus{
-  background:linear-gradient(145deg,#180307,#050505 65%,#210008);
-  border:1px solid #a71930;
-  box-shadow:inset 0 0 35px #a0002425;
-  animation:darkGlow 3s ease-in-out infinite alternate;
-}
-.darkplus h3,.darkplus .rank-label{color:#ff304d}
-.darkplus .price{color:#ff304d}
-.darkplus button{background:linear-gradient(90deg,#510713,#c20d2c)}
-.darkplus:hover{box-shadow:0 0 28px #ed153b80}
-
-@keyframes darkGlow{
-  from{box-shadow:inset 0 0 20px #a0002420,0 0 4px #a0002430}
-  to{box-shadow:inset 0 0 35px #a0002450,0 0 15px #c20d2c55}
-}
-
-footer{text-align:center;padding:28px;color:#888;border-top:1px solid var(--border)}
-
-@media(max-width:600px){
-  header{justify-content:center}
-  nav{justify-content:center}
-  nav a{font-size:12px}
-  .cart-item{align-items:flex-start;flex-direction:column}
-}
+footer{text-align:center;padding:35px;background:#101010;color:#999;border-top:1px solid var(--border)}
+hr{border:0;border-top:1px solid var(--border);margin:20px 0}
+@media(max-width:600px){header{justify-content:center}nav{justify-content:center}.hero{padding:65px 15px}section{padding:35px 4%}}
 </style>
 </head>
-
 <body>
 
 <header>
-  <div class="logo">DARK<span>SMP</span></div>
+  <div class="logo">DARKSMP</div>
   <nav>
     <a href="#anasayfa">Ana Sayfa</a>
-    <a href="#rutbeler">Rütbeler</a>
-    <a href="#paketler">Mağaza</a>
+    <a href="#ranks">Rütbeler</a>
     <a href="#basvurular">Başvurular</a>
     <a href="#sunucu">Sunucu</a>
-    <a href="#oyuncu">Oyuncu Paneli</a>
+    <a href="#hesap">Hesabım</a>
   </nav>
+  <button onclick="document.getElementById('hesap').scrollIntoView()">Hesabım</button>
 </header>
 
-<main>
+<div class="hero" id="anasayfa">
+  <h1>DARK<span>SMP</span></h1>
+  <p>Macera burada başlıyor. Kendi hikâyeni yaz!</p>
+  <button onclick="document.getElementById('ranks').scrollIntoView()">Mağazayı Keşfet</button>
+</div>
 
-<section class="hero" id="anasayfa">
-  <div>
-    <h1>DARK<span>SMP</span></h1>
-    <p>Yeni maceran burada başlıyor.</p>
-    <p><strong>dark.mcgiris.site</strong> | Minecraft 1.21.11</p>
-    <button onclick="copyIP()">Sunucu IP'sini Kopyala</button>
-    <a class="button" href="#oyuncu">Oyuncu Paneli</a>
+<section id="ranks">
+  <h2 class="section-title">SUNUCU <span>RÜTBELERİ</span></h2>
+  <p class="muted" style="text-align:center">Puanlarınla istediğin rütbeyi satın alabilirsin.</p>
+  <div class="grid" id="rankGrid"></div>
+  <div class="panel">
+    <div class="row">
+      <h3>Sepetim</h3>
+      <strong id="cartTotal">0 puan</strong>
+    </div>
+    <div id="cartItems" class="muted">Sepetin boş.</div>
+    <button onclick="purchaseCart()">Sepeti Satın Al</button>
+    <div id="purchaseMessage"></div>
   </div>
 </section>
 
-<section id="rutbeler">
-<div class="container">
-<h2 class="section-title">SUNUCU <span>RÜTBELERİ</span></h2>
-
-<div class="grid">
-
-<div class="card">
-  <h3>VIP</h3>
-  <p class="muted">Özel VIP ayrıcalıkları</p>
-  <div class="price">150 PUAN</div>
-  <button onclick="addToCart('vip')">Sepete Ekle</button>
-</div>
-
-<div class="card">
-  <h3>MVIP</h3>
-  <p class="muted">Daha fazla ayrıcalık</p>
-  <div class="price">200 PUAN</div>
-  <button onclick="addToCart('mvip')">Sepete Ekle</button>
-</div>
-
-<div class="card">
-  <h3>MVIP+</h3>
-  <p class="muted">Üst seviye ayrıcalıklar</p>
-  <div class="price">250 PUAN</div>
-  <button onclick="addToCart('mvipplus')">Sepete Ekle</button>
-</div>
-
-<div class="card rank-card supreme">
-  <div class="rank-label">GOLDEN ELITE</div>
-  <h3>SUPREME</h3>
-  <p class="muted">Altın ve siyahın gücü.</p>
-  <div class="price">250 PUAN</div>
-  <button onclick="addToCart('supreme')">Sepete Ekle</button>
-</div>
-
-<div class="card rank-card immortal">
-  <div class="rank-label">ETERNAL DARKNESS</div>
-  <h3>IMMORTAL</h3>
-  <p class="muted">Karanlığın içinden doğan güç.</p>
-  <div class="price">275 PUAN</div>
-  <button onclick="addToCart('immortal')">Sepete Ekle</button>
-</div>
-
-<div class="card rank-card legend">
-  <div class="rank-label">LEGENDARY</div>
-  <h3>LEGEND</h3>
-  <p class="muted">Altınla mühürlenmiş efsane.</p>
-  <div class="price">225 PUAN</div>
-  <button onclick="addToCart('legend')">Sepete Ekle</button>
-</div>
-
-<div class="card rank-card nova">
-  <div class="rank-label">COSMIC POWER</div>
-  <h3>NOVA</h3>
-  <p class="muted">Karanlıkta parlayan kozmik güç.</p>
-  <div class="price">300 PUAN</div>
-  <button onclick="addToCart('nova')">Sepete Ekle</button>
-</div>
-
-<div class="card rank-card emperor">
-  <div class="rank-label">ROYAL AUTHORITY</div>
-  <h3>EMPEROR</h3>
-  <p class="muted">Lacivert kraliyet ihtişamı.</p>
-  <div class="price">325 PUAN</div>
-  <button onclick="addToCart('emperor')">Sepete Ekle</button>
-</div>
-
-<div class="card rank-card darkplus">
-  <div class="rank-label">ULTIMATE DARKNESS</div>
-  <h3>DARK+</h3>
-  <p class="muted">Karanlığın en özel gücü.</p>
-  <div class="price">350 PUAN</div>
-  <button onclick="addToCart('dark')">Sepete Ekle</button>
-</div>
-
-</div>
-
-<p class="notice" style="text-align:center;margin-top:18px">
-  Sunucuda her 20 dakika için 1 puan kazanırsın.
-</p>
-</div>
-</section>
-
-<section id="paketler">
-<div class="container">
-<h2 class="section-title">DARKSMP <span>MAĞAZA SEPETİ</span></h2>
-<div class="panel">
-<h3>Sepetim</h3>
-<p class="muted">Satın almak istediğin rütbeleri buradan yönetebilirsin.</p>
-<div id="cartItems">Sepetin boş.</div>
-<div class="cart-total">Toplam: <span id="cartTotal">0</span> PUAN</div>
-<p class="muted">Mevcut puanın: <strong id="cartPlayerPoints">Giriş yapmalısın</strong></p>
-<button id="purchaseButton" onclick="purchaseCart()">Puanla Satın Al</button>
-<button class="secondary" onclick="clearCart()">Sepeti Temizle</button>
-<div id="cartMessage" class="status hidden"></div>
-</div>
-</div>
-</section>
-
 <section id="basvurular">
-<div class="container">
-<h2 class="section-title">EKİBE <span>KATIL</span></h2>
-<div class="grid">
-<div class="card">
-<h3>Rehber Başvurusu</h3>
-<p class="muted">Sunucuda oyunculara yardımcı ol.</p>
-<a class="button" target="_blank" rel="noopener" href="https://www.tiktok.com/@dark.mcgiris.site">Başvur</a>
-</div>
-<div class="card">
-<h3>Medya Başvurusu</h3>
-<p class="muted">DarkSMP içerik ekibine katıl.</p>
-<a class="button" target="_blank" rel="noopener" href="https://www.tiktok.com/@dark.mcgiris.site">Başvur</a>
-</div>
-</div>
-</div>
+  <h2 class="section-title">EKİBE <span>KATIL</span></h2>
+  <p class="muted" style="text-align:center">Başvurular yönetici tarafından incelenir. Onaylanana kadar durumun beklemede kalır.</p>
+  <div class="grid">
+    <div class="application-card">
+      <h3>Moderatör</h3>
+      <p class="muted">Sunucudaki düzenin korunmasına yardımcı ol.</p>
+      <button onclick="openApplication('moderator')">Başvur</button>
+    </div>
+    <div class="application-card">
+      <h3>Medya</h3>
+      <p class="muted">Sunucunun içerik ve tanıtım çalışmalarına katıl.</p>
+      <button onclick="openApplication('media')">Başvur</button>
+    </div>
+    <div class="application-card">
+      <h3>Rehber</h3>
+      <p class="muted">Yeni oyunculara yardımcı ol.</p>
+      <button onclick="openApplication('guide')">Başvur</button>
+    </div>
+    <div class="application-card">
+      <h3>Sponsor</h3>
+      <p class="muted">DarkSMP ile iş birliği yapmak için başvur.</p>
+      <button onclick="openApplication('sponsor')">Başvur</button>
+    </div>
+  </div>
+
+  <div class="panel hidden" id="applicationFormPanel">
+    <div class="row">
+      <h3 id="applicationTitle">Başvuru Formu</h3>
+      <button class="secondary" onclick="closeApplication()">Kapat</button>
+    </div>
+    <form id="applicationForm">
+      <label>Discord kullanıcı adın</label>
+      <input id="appDiscord" required maxlength="100" placeholder="örnek: kullanici">
+
+      <label>Platform / İçerik türü</label>
+      <input id="appPlatform" required maxlength="100" placeholder="Örnek: YouTube, TikTok veya Minecraft">
+
+      <label>Kanal veya profil bağlantısı</label>
+      <input id="appUrl" required maxlength="500" type="url" placeholder="https://...">
+
+      <label>Deneyimin</label>
+      <textarea id="appExperience" required maxlength="2000" placeholder="Daha önce yaptığın çalışmaları anlat..."></textarea>
+
+      <label>Neden başvuruyorsun?</label>
+      <textarea id="appReason" required maxlength="2000" placeholder="Kendini ve başvuru amacını anlat..."></textarea>
+
+      <button id="applicationSubmit" type="submit">Başvuruyu Gönder</button>
+      <div id="applicationMessage"></div>
+    </form>
+  </div>
+
+  <div class="panel" id="myApplicationsPanel">
+    <h3>Başvurularım</h3>
+    <div id="myApplications" class="muted">Başvurularını görmek için giriş yapmalısın.</div>
+  </div>
 </section>
 
 <section id="sunucu">
-<div class="container">
-<h2 class="section-title">SUNUCU <span>BİLGİLERİ</span></h2>
-<div class="card">
-<h3>DarkSMP Minecraft</h3>
-<p>Sunucu adresi: <strong>dark.mcgiris.site</strong></p>
-<p>Sürüm: <strong>1.21.11</strong></p>
-<button onclick="copyIP()">IP'yi Kopyala</button>
-</div>
-</div>
+  <h2 class="section-title">SUNUCU <span>BİLGİLERİ</span></h2>
+  <div class="panel" style="text-align:center">
+    <h3>DarkSMP Minecraft Sunucusu</h3>
+    <p class="muted">Sürüm: 1.21.11</p>
+    <p class="muted">Sunucu adresini aşağıdaki değişkene kendi adresini yazarak ayarlayabilirsin.</p>
+    <button onclick="copyIP()">Sunucu IP'sini Kopyala</button>
+    <div id="ipMessage"></div>
+  </div>
 </section>
 
-<section id="oyuncu">
-<div class="container">
-<h2 class="section-title">OYUNCU <span>PANELİ</span></h2>
+<section id="hesap">
+  <h2 class="section-title">OYUNCU <span>PANELİ</span></h2>
 
-<div id="authArea" class="auth-grid">
-<div class="panel">
-<h3>Giriş Yap</h3>
-<label>E-posta</label>
-<input id="loginEmail" type="email" placeholder="E-posta adresin">
-<label>Şifre</label>
-<input id="loginPassword" type="password" placeholder="Şifren">
-<button onclick="login()">Giriş Yap</button>
-</div>
+  <div class="panel" id="authPanel">
+    <h3>Hesabına Giriş Yap</h3>
+    <div class="form-grid">
+      <div>
+        <label>E-posta</label>
+        <input id="authEmail" type="email" required placeholder="E-posta adresin">
+      </div>
+      <div>
+        <label>Şifre</label>
+        <input id="authPassword" type="password" required placeholder="Şifren">
+      </div>
+    </div>
+    <div id="registerNameBox" class="hidden">
+      <label>Minecraft kullanıcı adın</label>
+      <input id="minecraftName" maxlength="16" placeholder="Minecraft kullanıcı adı">
+    </div>
+    <div class="row">
+      <button onclick="login()">Giriş Yap</button>
+      <button class="secondary" onclick="register()">Kayıt Ol</button>
+    </div>
+    <div id="authMessage"></div>
+  </div>
 
-<div class="panel">
-<h3>Hesap Oluştur</h3>
-<label>Minecraft kullanıcı adı</label>
-<input id="registerMinecraft" placeholder="Minecraft adın" maxlength="16">
-<label>E-posta</label>
-<input id="registerEmail" type="email" placeholder="E-posta adresin">
-<label>Şifre</label>
-<input id="registerPassword" type="password" placeholder="En az 6 karakter">
-<button onclick="register()">Kayıt Ol</button>
-</div>
-</div>
+  <div class="panel hidden" id="playerPanel">
+    <div class="row">
+      <h3>Oyuncu Panelin</h3>
+      <button class="secondary" onclick="logout()">Çıkış Yap</button>
+    </div>
+    <div id="approvalMessage" class="notice"></div>
+    <div class="grid">
+      <div class="stat">Minecraft<strong id="playerMinecraft">-</strong></div>
+      <div class="stat">Puan<strong id="playerPoints">0</strong></div>
+      <div class="stat">Toplam Süre<strong id="playerMinutes">0 dakika</strong></div>
+      <div class="stat">Bakiye<strong id="playerBalance">0 TL</strong></div>
+    </div>
 
-<div id="message"></div>
+    <div class="panel">
+      <h3>Günlük Ödül</h3>
+      <p class="muted">Her gün giriş yap, puan kazan. Her 5. gün 2 puan al!</p>
+      <div class="grid">
+        <div class="stat">Günlük Seri<strong id="dailyStreak">0 gün</strong></div>
+        <div class="stat">Son Ödül<strong id="dailyLastClaim">Henüz alınmadı</strong></div>
+      </div>
+      <p id="dailyInfo" class="muted"></p>
+      <button id="dailyButton" onclick="claimDailyReward()">Günlük Ödülümü Al</button>
+      <div id="dailyMessage"></div>
+    </div>
 
-<div id="playerArea" class="panel hidden">
-<div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
-<h3>Oyuncu Panelin</h3>
-<button class="secondary" onclick="logout()">Çıkış Yap</button>
-</div>
-<p>Minecraft: <strong id="playerMinecraft">-</strong></p>
-<div id="approvalStatus" class="status">Hesap durumu kontrol ediliyor...</div>
-<div class="stat-grid">
-<div class="stat">Puan<strong id="playerPoints">0</strong></div>
-<div class="stat">Toplam süre<strong id="playerMinutes">0 dakika</strong></div>
-</div>
-<button onclick="refreshPlayer()">Yenile</button>
-</div>
+    <div class="panel">
+      <h3>Başvuru Durumlarım</h3>
+      <div id="playerApplicationList" class="muted">Yükleniyor...</div>
+    </div>
+  </div>
 
-<div id="adminArea" class="panel hidden" style="margin-top:20px">
-<h3 style="color:#ff5265">YÖNETİCİ PANELİ</h3>
-<p class="muted">Oyuncu hesaplarını buradan yönetebilirsin.</p>
-<button onclick="loadPlayers()">Oyuncuları Yenile</button>
-<div id="adminMessage" class="notice"></div>
-<div class="table-wrap">
-<table>
-<thead>
-<tr>
-<th>Minecraft</th><th>Onay</th><th>Puan</th><th>Süre</th><th>İşlem</th>
-</tr>
-</thead>
-<tbody id="playersTable">
-<tr><td colspan="5">Oyuncular yükleniyor...</td></tr>
-</tbody>
-</table>
-</div>
-</div>
-
-</div>
+  <div class="panel hidden" id="adminPanel">
+    <h2>Yönetici Paneli</h2>
+    <p class="muted">Bu alan yalnızca yönetici hesabıyla kullanılabilir.</p>
+    <h3>Oyuncu Yönetimi</h3>
+    <button onclick="loadPlayers()">Oyuncuları Yenile</button>
+    <div id="adminPlayers" class="table-wrap"></div>
+    <hr>
+    <h3>Başvuru Yönetimi</h3>
+    <button onclick="loadApplications()">Başvuruları Yenile</button>
+    <div id="adminApplications" class="table-wrap"></div>
+  </div>
 </section>
-
-</main>
 
 <footer>
-© 2026 DarkSMP - Tüm hakları saklıdır.
+  <h3 style="color:var(--red2)">DARKSMP</h3>
+  <p>DarkSMP Resmi Sunucu Sitesi</p>
 </footer>
 
 <script>
 const SUPABASE_URL = "https://frfltsscbbvgjdffrxot.supabase.co";
-const SUPABASE_KEY = "sb_publishable_TLuw_sK8M8gi4gFwBAx2gg__-t0ahzE";
-
+const SUPABASE_KEY = "sb_publishable_TLuw_S8K8M8gi4gFwBAx2gg__-t0ahzE";
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-let currentUser = null;
-let isAdmin = false;
-let currentPlayer = null;
-let cart = [];
+// Sunucu IP adresini buraya yaz.
+const SERVER_IP = "SUNUCU_IP_ADRESINI_BURAYA_YAZ";
 
 const products = {
-  vip: { name: "VIP", price: 150 },
-  mvip: { name: "MVIP", price: 200 },
-  mvipplus: { name: "MVIP+", price: 250 },
-
-  supreme: { name: "SUPREME", price: 250 },
-  immortal: { name: "IMMORTAL", price: 275 },
-  legend: { name: "LEGEND", price: 225 },
-  nova: { name: "NOVA", price: 300 },
-  emperor: { name: "EMPEROR", price: 325 },
-  dark: { name: "DARK+", price: 350 }
+  vip:       {name:"VIP", price:150},
+  mvip:      {name:"MVIP", price:200},
+  mvipplus:  {name:"MVIP+", price:250},
+  supreme:   {name:"SUPREME", price:250},
+  immortal:  {name:"IMMORTAL", price:275},
+  legend:    {name:"LEGEND", price:225},
+  nova:      {name:"NOVA", price:300},
+  emperor:   {name:"EMPEROR", price:325},
+  darkplus:  {name:"DARK+", price:350}
 };
 
-function showMessage(message, isError = true) {
-  const el = document.getElementById("message");
-  el.style.color = isError ? "#ff6878" : "#72df9b";
+const applicationNames = {
+  moderator:"Moderatör",
+  media:"Medya",
+  guide:"Rehber",
+  sponsor:"Sponsor"
+};
+
+let cart = [];
+let currentUser = null;
+let currentPlayer = null;
+let selectedApplicationType = null;
+
+function showMessage(id, message, type="notice") {
+  const el = document.getElementById(id);
+  el.className = "notice " + type;
   el.textContent = message;
 }
 
-function showCartMessage(message, isError = true) {
-  const el = document.getElementById("cartMessage");
-  el.classList.remove("hidden");
-  el.style.color = isError ? "#ff6878" : "#72df9b";
-  el.textContent = message;
+function clearMessage(id) {
+  const el = document.getElementById(id);
+  el.textContent = "";
+  el.className = "";
 }
 
-function copyIP() {
-  navigator.clipboard.writeText("dark.mcgiris.site")
-    .then(() => alert("Sunucu IP'si kopyalandı!"))
-    .catch(() => alert("Sunucu IP'si: dark.mcgiris.site"));
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  })[char]);
+}
+
+function renderRanks() {
+  const grid = document.getElementById("rankGrid");
+  grid.replaceChildren();
+
+  Object.entries(products).forEach(([code, product]) => {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const title = document.createElement("h3");
+    title.textContent = product.name;
+
+    const price = document.createElement("div");
+    price.className = "price";
+    price.textContent = product.price + " PUAN";
+
+    const button = document.createElement("button");
+    button.textContent = "Sepete Ekle";
+    button.onclick = () => addToCart(code);
+
+    card.append(title, price, button);
+    grid.appendChild(card);
+  });
 }
 
 function addToCart(code) {
   if (!products[code]) return;
-
-  if (cart.length >= 10) {
-    return showCartMessage("Sepette en fazla 10 ürün olabilir.");
-  }
-
   cart.push(code);
   renderCart();
-  showCartMessage(products[code].name + " sepete eklendi.", false);
 }
 
 function removeFromCart(index) {
-  if (index < 0 || index >= cart.length) return;
   cart.splice(index, 1);
   renderCart();
 }
 
-function clearCart() {
-  cart = [];
-  renderCart();
-  showCartMessage("Sepet temizlendi.", false);
-}
-
 function renderCart() {
-  const container = document.getElementById("cartItems");
-  const totalElement = document.getElementById("cartTotal");
-
-  container.innerHTML = "";
+  const area = document.getElementById("cartItems");
+  area.replaceChildren();
 
   if (!cart.length) {
-    container.textContent = "Sepetin boş.";
-  } else {
-    cart.forEach((code, index) => {
-      const product = products[code];
-      const row = document.createElement("div");
-      row.className = "cart-item";
-
-      const info = document.createElement("span");
-      info.textContent = product.name + " - " + product.price + " puan";
-
-      const remove = document.createElement("button");
-      remove.className = "danger";
-      remove.textContent = "Sepetten Çıkar";
-      remove.onclick = () => removeFromCart(index);
-
-      row.append(info, remove);
-      container.appendChild(row);
-    });
+    area.textContent = "Sepetin boş.";
+    document.getElementById("cartTotal").textContent = "0 puan";
+    return;
   }
 
-  const total = cart.reduce((sum, code) => sum + products[code].price, 0);
-  totalElement.textContent = total;
+  let total = 0;
+  cart.forEach((code, index) => {
+    const product = products[code];
+    total += product.price;
 
-  document.getElementById("cartPlayerPoints").textContent =
-    currentPlayer ? currentPlayer.points + " puan" : "Giriş yapmalısın";
+    const line = document.createElement("div");
+    line.className = "row";
+    line.style.padding = "8px 0";
+
+    const name = document.createElement("span");
+    name.textContent = product.name + " - " + product.price + " puan";
+
+    const remove = document.createElement("button");
+    remove.className = "danger";
+    remove.textContent = "Kaldır";
+    remove.onclick = () => removeFromCart(index);
+
+    line.append(name, remove);
+    area.appendChild(line);
+  });
+
+  document.getElementById("cartTotal").textContent = total + " puan";
+}
+
+async function purchaseCart() {
+  if (!currentUser) {
+    showMessage("purchaseMessage", "Satın almak için giriş yapmalısın.", "error");
+    return;
+  }
+  if (!currentPlayer || !currentPlayer.approved) {
+    showMessage("purchaseMessage", "Hesabın yönetici onayı bekliyor.", "error");
+    return;
+  }
+  if (!cart.length) {
+    showMessage("purchaseMessage", "Sepetin boş.", "error");
+    return;
+  }
+
+  const button = document.querySelector("#ranks .panel button");
+  button.disabled = true;
+
+  const {data, error} = await db.rpc("purchase_rank_cart", {
+    p_ranks: cart
+  });
+
+  button.disabled = false;
+
+  if (error) {
+    showMessage("purchaseMessage", error.message, "error");
+    return;
+  }
+
+  showMessage("purchaseMessage", "Satın alma talebin alındı. Siparişin işlenmeyi bekliyor.", "success");
+  cart = [];
+  renderCart();
+  await refreshPlayer();
 }
 
 async function register() {
-  const minecraft = document.getElementById("registerMinecraft").value.trim();
-  const email = document.getElementById("registerEmail").value.trim();
-  const password = document.getElementById("registerPassword").value;
+  const email = document.getElementById("authEmail").value.trim();
+  const password = document.getElementById("authPassword").value;
+  const minecraft = document.getElementById("minecraftName").value.trim();
 
-  if (!minecraft || !email || !password) {
-    return showMessage("Lütfen tüm alanları doldur.");
+  if (!email || !password || !minecraft) {
+    showMessage("authMessage", "E-posta, şifre ve Minecraft adını doldur.", "error");
+    return;
   }
 
   if (!/^[A-Za-z0-9_]{3,16}$/.test(minecraft)) {
-    return showMessage("Minecraft adı 3-16 karakter olmalı; harf, rakam ve _ kullanabilirsin.");
+    showMessage("authMessage", "Minecraft kullanıcı adı 3-16 karakter olmalı; harf, rakam ve alt çizgi kullan.", "error");
+    return;
   }
 
-  if (password.length < 6) {
-    return showMessage("Şifre en az 6 karakter olmalı.");
-  }
-
-  showMessage("Hesap oluşturuluyor...", false);
-
-  const { data, error } = await db.auth.signUp({
+  const {data, error} = await db.auth.signUp({
     email,
     password,
-    options: {
-      emailRedirectTo: "https://darksmpofficial.github.io/darksmp-store/",
-      data: { minecraft_username: minecraft }
-    }
+    options: {data: {minecraft_username: minecraft}}
   });
 
-  if (error) return showMessage(error.message);
+  if (error) {
+    showMessage("authMessage", error.message, "error");
+    return;
+  }
 
   if (data.session) {
-    await refreshSession();
-    showMessage("Hesabın oluşturuldu!", false);
+    showMessage("authMessage", "Kayıt başarılı. E-posta adresini doğrulaman gerekiyorsa gelen kutunu kontrol et.", "success");
+    await checkSession();
   } else {
-    showMessage("Kayıt başarılı! E-postana gelen doğrulama bağlantısına tıkla. Sonra giriş yap.", false);
+    showMessage("authMessage", "Kayıt isteği oluşturuldu. E-posta doğrulamasını tamamla, sonra giriş yap.", "success");
   }
 }
 
 async function login() {
-  const email = document.getElementById("loginEmail").value.trim();
-  const password = document.getElementById("loginPassword").value;
+  const email = document.getElementById("authEmail").value.trim();
+  const password = document.getElementById("authPassword").value;
 
-  if (!email || !password) return showMessage("E-posta ve şifreni gir.");
+  const {error} = await db.auth.signInWithPassword({email, password});
 
-  const { error } = await db.auth.signInWithPassword({ email, password });
-  if (error) return showMessage(error.message);
+  if (error) {
+    showMessage("authMessage", error.message, "error");
+    return;
+  }
 
-  await refreshSession();
-  showMessage("Giriş başarılı!", false);
+  showMessage("authMessage", "Giriş başarılı.", "success");
+  await checkSession();
 }
 
 async function logout() {
   await db.auth.signOut();
   currentUser = null;
-  isAdmin = false;
   currentPlayer = null;
-
-  document.getElementById("authArea").classList.remove("hidden");
-  document.getElementById("playerArea").classList.add("hidden");
-  document.getElementById("adminArea").classList.add("hidden");
-
-  renderCart();
-  showMessage("Çıkış yapıldı.", false);
+  updateAuthUI();
 }
 
-async function refreshSession() {
-  const { data } = await db.auth.getUser();
-  currentUser = data.user;
-  await refreshPlayer();
+function updateAuthUI() {
+  document.getElementById("authPanel").classList.toggle("hidden", !!currentUser);
+  document.getElementById("playerPanel").classList.toggle("hidden", !currentUser);
+  document.getElementById("adminPanel").classList.add("hidden");
+  document.getElementById("myApplicationsPanel").classList.toggle("hidden", !currentUser);
+}
+
+async function checkSession() {
+  const {data} = await db.auth.getSession();
+  currentUser = data.session?.user || null;
+  updateAuthUI();
+
+  if (currentUser) {
+    await refreshPlayer();
+    await checkAdmin();
+    await loadMyApplications();
+  }
 }
 
 async function refreshPlayer() {
   if (!currentUser) return;
 
-  const { data, error } = await db
+  const {data, error} = await db
     .from("players")
-    .select("id,minecraft_username,approved,total_minutes,points")
+    .select("id,minecraft_username,approved,total_minutes,points,balance,daily_streak,last_daily_claim")
     .eq("user_id", currentUser.id)
     .maybeSingle();
 
-  if (error) return showMessage("Oyuncu bilgileri alınamadı: " + error.message);
-  if (!data) return showMessage("Oyuncu kaydın bulunamadı. Yöneticiyle iletişime geç.");
+  if (error) {
+    showMessage("approvalMessage", "Oyuncu bilgileri alınamadı: " + error.message, "error");
+    return;
+  }
 
   currentPlayer = data;
 
-  document.getElementById("authArea").classList.add("hidden");
-  document.getElementById("playerArea").classList.remove("hidden");
+  if (!data) {
+    showMessage("approvalMessage", "Oyuncu kaydın henüz oluşturulmadı. Biraz sonra sayfayı yenile.");
+    return;
+  }
 
   document.getElementById("playerMinecraft").textContent = data.minecraft_username || "-";
   document.getElementById("playerPoints").textContent = data.points ?? 0;
   document.getElementById("playerMinutes").textContent = (data.total_minutes ?? 0) + " dakika";
+  document.getElementById("playerBalance").textContent = Number(data.balance ?? 0).toFixed(2) + " TL";
+  document.getElementById("dailyStreak").textContent = (data.daily_streak ?? 0) + " gün";
+  document.getElementById("dailyLastClaim").textContent = data.last_daily_claim || "Henüz alınmadı";
 
-  const status = document.getElementById("approvalStatus");
-  status.textContent = data.approved
-    ? "Hesabın onaylandı. Sunucuya hoş geldin!"
-    : "Hesabın yönetici onayı bekliyor.";
+  const approved = !!data.approved;
+  showMessage(
+    "approvalMessage",
+    approved ? "Hesabın onaylandı. Mağazayı ve günlük ödülü kullanabilirsin." : "Hesabın yönetici onayı bekliyor. Onaylanana kadar günlük ödül ve mağaza kullanılamaz.",
+    approved ? "success" : "notice"
+  );
 
-  renderCart();
-  await checkAdmin();
+  const claimedToday = data.last_daily_claim === new Date().toLocaleDateString("en-CA", {timeZone:"Europe/Istanbul"});
+  const dailyButton = document.getElementById("dailyButton");
+  dailyButton.disabled = !approved || claimedToday;
+  dailyButton.textContent = claimedToday ? "Bugünkü ödül alındı" : "Günlük Ödülümü Al";
+  document.getElementById("dailyInfo").textContent =
+    claimedToday ? "Yarın tekrar gelebilirsin." : "Bugünkü ödülünü almak için butona bas.";
+
+  document.getElementById("playerPanel").classList.remove("hidden");
 }
 
-async function purchaseCart() {
-  if (!currentUser) {
-    return showCartMessage("Satın almak için önce giriş yapmalısın.");
-  }
+async function claimDailyReward() {
+  if (!currentUser || !currentPlayer) return;
 
-  if (!currentPlayer) {
-    return showCartMessage("Oyuncu bilgilerin yüklenemedi.");
-  }
-
-  if (!currentPlayer.approved) {
-    return showCartMessage("Hesabın henüz yönetici tarafından onaylanmamış.");
-  }
-
-  if (!cart.length) {
-    return showCartMessage("Sepetin boş.");
-  }
-
-  const total = cart.reduce((sum, code) => sum + products[code].price, 0);
-
-  if (Number(currentPlayer.points) < total) {
-    return showCartMessage(
-      "Yetersiz puan! Gerekli: " + total +
-      " | Mevcut: " + currentPlayer.points
-    );
-  }
-
-  const button = document.getElementById("purchaseButton");
+  const button = document.getElementById("dailyButton");
   button.disabled = true;
-  button.textContent = "Satın alınıyor...";
 
-  try {
-    const { data, error } = await db.rpc("purchase_rank_cart", {
-      p_ranks: [...cart]
-    });
+  const {data, error} = await db.rpc("claim_daily_reward");
 
-    if (error) {
-      showCartMessage(error.message);
-      return;
-    }
-
-    if (!data || !data.success) {
-      showCartMessage(data?.message || "Satın alma tamamlanamadı.");
-      return;
-    }
-
-    cart = [];
-    renderCart();
-
-    showCartMessage(
-      "Satın alma başarılı! " + data.total +
-      " puan harcandı. Rütbelerin sunucuya gönderilecek.",
-      false
-    );
-
+  if (error) {
+    showMessage("dailyMessage", error.message, "error");
     await refreshPlayer();
-
-  } catch (error) {
-    showCartMessage("Bir hata oluştu: " + error.message);
-  } finally {
-    button.disabled = false;
-    button.textContent = "Puanla Satın Al";
+    return;
   }
+
+  showMessage(
+    "dailyMessage",
+    "Tebrikler! " + data.reward + " puan kazandın. Günlük serin: " + data.streak + " gün.",
+    "success"
+  );
+
+  await refreshPlayer();
+}
+
+function openApplication(type) {
+  if (!currentUser) {
+    document.getElementById("authMessage").textContent = "Başvuru yapmak için önce giriş yapmalısın.";
+    document.getElementById("hesap").scrollIntoView();
+    return;
+  }
+
+  if (!applicationNames[type]) return;
+
+  selectedApplicationType = type;
+  document.getElementById("applicationTitle").textContent = applicationNames[type] + " Başvuru Formu";
+  document.getElementById("applicationFormPanel").classList.remove("hidden");
+  clearMessage("applicationMessage");
+  document.getElementById("applicationFormPanel").scrollIntoView({behavior:"smooth"});
+}
+
+function closeApplication() {
+  document.getElementById("applicationFormPanel").classList.add("hidden");
+  document.getElementById("applicationForm").reset();
+  selectedApplicationType = null;
+}
+
+document.getElementById("applicationForm").addEventListener("submit", async event => {
+  event.preventDefault();
+
+  if (!currentUser || !selectedApplicationType) {
+    showMessage("applicationMessage", "Önce giriş yapmalısın.", "error");
+    return;
+  }
+
+  const button = document.getElementById("applicationSubmit");
+  button.disabled = true;
+
+  const values = {
+    p_type: selectedApplicationType,
+    p_discord: document.getElementById("appDiscord").value.trim(),
+    p_platform: document.getElementById("appPlatform").value.trim(),
+    p_channel_url: document.getElementById("appUrl").value.trim(),
+    p_experience: document.getElementById("appExperience").value.trim(),
+    p_reason: document.getElementById("appReason").value.trim()
+  };
+
+  const {data, error} = await db.rpc("submit_application", values);
+  button.disabled = false;
+
+  if (error) {
+    showMessage("applicationMessage", error.message, "error");
+    return;
+  }
+
+  showMessage("applicationMessage", "Başvurun gönderildi. Yönetici incelemesi bekleniyor.", "success");
+  document.getElementById("applicationForm").reset();
+  await loadMyApplications();
+  await loadPlayerApplications();
+});
+
+function statusLabel(status) {
+  if (status === "pending") return "Onay Bekliyor";
+  if (status === "approved") return "Onaylandı";
+  if (status === "rejected") return "Reddedildi";
+  return status;
+}
+
+function createApplicationCard(app) {
+  const card = document.createElement("div");
+  card.className = "application-card";
+
+  const title = document.createElement("h3");
+  title.textContent = applicationNames[app.application_type] || app.application_type;
+
+  const status = document.createElement("span");
+  status.className = "status " + app.status;
+  status.textContent = statusLabel(app.status);
+
+  const date = document.createElement("p");
+  date.className = "muted";
+  date.textContent = "Başvuru tarihi: " + new Date(app.created_at).toLocaleString("tr-TR");
+
+  const note = document.createElement("p");
+  note.textContent = app.admin_note ? "Yönetici notu: " + app.admin_note : "";
+
+  card.append(title, status, date, note);
+  return card;
+}
+
+async function loadMyApplications() {
+  if (!currentUser) return;
+
+  const {data, error} = await db
+    .from("applications")
+    .select("id,application_type,status,admin_note,created_at")
+    .eq("user_id", currentUser.id)
+    .order("created_at", {ascending:false});
+
+  const area = document.getElementById("myApplications");
+  area.replaceChildren();
+
+  if (error) {
+    area.textContent = "Başvurular yüklenemedi: " + error.message;
+    return;
+  }
+
+  if (!data.length) {
+    area.textContent = "Henüz başvurun bulunmuyor.";
+    return;
+  }
+
+  data.forEach(app => area.appendChild(createApplicationCard(app)));
+}
+
+async function loadPlayerApplications() {
+  if (!currentUser) return;
+
+  const {data, error} = await db
+    .from("applications")
+    .select("id,application_type,status,admin_note,created_at")
+    .eq("user_id", currentUser.id)
+    .order("created_at", {ascending:false});
+
+  const area = document.getElementById("playerApplicationList");
+  area.replaceChildren();
+
+  if (error) {
+    area.textContent = error.message;
+    return;
+  }
+
+  if (!data.length) {
+    area.textContent = "Henüz başvurun yok.";
+    return;
+  }
+
+  data.forEach(app => area.appendChild(createApplicationCard(app)));
 }
 
 async function checkAdmin() {
-  isAdmin = false;
-  document.getElementById("adminArea").classList.add("hidden");
-
   if (!currentUser) return;
 
-  const { data, error } = await db
+  const {data, error} = await db
     .from("admins")
     .select("user_id")
     .eq("user_id", currentUser.id)
     .maybeSingle();
 
-  if (error) {
-    console.error("Yönetici kontrolü:", error.message);
-    return;
-  }
-
-  if (data) {
-    isAdmin = true;
-    document.getElementById("adminArea").classList.remove("hidden");
+  if (!error && data) {
+    document.getElementById("adminPanel").classList.remove("hidden");
     await loadPlayers();
+    await loadApplications();
   }
 }
 
 async function loadPlayers() {
-  if (!isAdmin) return;
+  const area = document.getElementById("adminPlayers");
+  area.textContent = "Oyuncular yükleniyor...";
 
-  const tbody = document.getElementById("playersTable");
-  const adminMessage = document.getElementById("adminMessage");
-
-  tbody.innerHTML = '<tr><td colspan="5">Yükleniyor...</td></tr>';
-
-  const { data, error } = await db
+  const {data, error} = await db
     .from("players")
-    .select("id,minecraft_username,approved,points,total_minutes")
-    .order("created_at", { ascending: false });
+    .select("id,minecraft_username,approved,total_minutes,points,balance")
+    .order("created_at", {ascending:false});
 
   if (error) {
-    tbody.innerHTML = "";
-    adminMessage.textContent = "Oyuncular alınamadı: " + error.message;
+    area.textContent = "Oyuncular yüklenemedi: " + error.message;
     return;
   }
 
-  adminMessage.textContent = "Toplam oyuncu: " + data.length;
-
-  if (!data.length) {
-    tbody.innerHTML = '<tr><td colspan="5">Henüz oyuncu yok.</td></tr>';
-    return;
-  }
-
-  tbody.innerHTML = "";
+  const table = document.createElement("table");
+  const head = document.createElement("tr");
+  ["Minecraft","Onay","Dakika","Puan","Bakiye","İşlem"].forEach(value => {
+    const th = document.createElement("th");
+    th.textContent = value;
+    head.appendChild(th);
+  });
+  table.appendChild(head);
 
   data.forEach(player => {
     const tr = document.createElement("tr");
-    tr.className = "admin-row";
+    const values = [
+      player.minecraft_username,
+      player.approved ? "Onaylı" : "Bekliyor",
+      player.total_minutes,
+      player.points,
+      Number(player.balance || 0).toFixed(2) + " TL"
+    ];
 
-    const name = document.createElement("td");
-    name.textContent = player.minecraft_username || "İsimsiz";
-
-    const approval = document.createElement("td");
-    approval.textContent = player.approved ? "Onaylı" : "Bekliyor";
-
-    const points = document.createElement("td");
-    points.textContent = player.points ?? 0;
-
-    const minutes = document.createElement("td");
-    minutes.textContent = (player.total_minutes ?? 0) + " dk";
-
-    const actions = document.createElement("td");
-
-    const approveBtn = document.createElement("button");
-    approveBtn.textContent = player.approved ? "Onayı Kaldır" : "Onayla";
-    approveBtn.className = player.approved ? "danger" : "";
-    approveBtn.onclick = () => updatePlayer(player.id, {
-      approved: !player.approved
+    values.forEach(value => {
+      const td = document.createElement("td");
+      td.textContent = value ?? "-";
+      tr.appendChild(td);
     });
 
-    const pointsBtn = document.createElement("button");
-    pointsBtn.textContent = "Puan";
-    pointsBtn.className = "secondary";
-    pointsBtn.style.margin = "5px";
-    pointsBtn.onclick = () => editPoints(player.id);
+    const action = document.createElement("td");
+    const approve = document.createElement("button");
+    approve.textContent = player.approved ? "Onayı Kaldır" : "Onayla";
+    approve.onclick = () => updatePlayer(player.id, {approved:!player.approved});
 
-    actions.append(approveBtn, pointsBtn);
-    tr.append(name, approval, points, minutes, actions);
-    tbody.appendChild(tr);
+    const points = document.createElement("button");
+    points.className = "secondary";
+    points.textContent = "Puan";
+    points.onclick = async () => {
+      const value = prompt("Yeni puan miktarı:", player.points);
+      if (value === null || value.trim() === "" || !Number.isInteger(Number(value)) || Number(value) < 0) return;
+      await updatePlayer(player.id, {points:Number(value)});
+    };
+
+    const balance = document.createElement("button");
+    balance.className = "secondary";
+    balance.textContent = "Bakiye";
+    balance.onclick = async () => {
+      const value = prompt("Yeni TL bakiyesi:", player.balance);
+      if (value === null || value.trim() === "" || !Number.isFinite(Number(value)) || Number(value) < 0) return;
+      await updatePlayer(player.id, {balance:Number(value)});
+    };
+
+    action.append(approve, document.createTextNode(" "), points, document.createTextNode(" "), balance);
+    tr.appendChild(action);
+    table.appendChild(tr);
   });
+
+  area.replaceChildren(table);
 }
 
 async function updatePlayer(id, changes) {
-  if (!isAdmin) return showAdminMessage("Bu işlem için yönetici yetkisi gerekiyor.");
+  const {error} = await db.from("players").update(changes).eq("id", id);
 
-  const { error } = await db
-    .from("players")
-    .update(changes)
-    .eq("id", id);
+  if (error) {
+    alert("Oyuncu güncellenemedi: " + error.message);
+    return;
+  }
 
-  if (error) return showAdminMessage("İşlem başarısız: " + error.message);
-
-  showAdminMessage("Oyuncu bilgileri güncellendi.");
   await loadPlayers();
   await refreshPlayer();
 }
 
-async function editPoints(id) {
-  if (!isAdmin) return;
+async function loadApplications() {
+  const area = document.getElementById("adminApplications");
+  area.textContent = "Başvurular yükleniyor...";
 
-  const answer = prompt("Yeni puan miktarı:");
-  if (answer === null || answer.trim() === "") return;
+  const {data, error} = await db
+    .from("applications")
+    .select("id,user_id,minecraft_username,application_type,discord_username,platform,channel_url,experience,reason,status,admin_note,created_at")
+    .order("created_at", {ascending:false});
 
-  const number = Number(answer);
-
-  if (!Number.isInteger(number) || number < 0) {
-    return showAdminMessage("0 veya daha büyük tam sayı gir.");
+  if (error) {
+    area.textContent = "Başvurular yüklenemedi: " + error.message;
+    return;
   }
 
-  await updatePlayer(id, { points: number });
+  if (!data.length) {
+    area.textContent = "Henüz başvuru yok.";
+    return;
+  }
+
+  const table = document.createElement("table");
+  const head = document.createElement("tr");
+
+  ["Oyuncu","Tür","Discord","Platform","Bağlantı","Deneyim","Sebep","Durum","İşlem"].forEach(value => {
+    const th = document.createElement("th");
+    th.textContent = value;
+    head.appendChild(th);
+  });
+
+  table.appendChild(head);
+
+  data.forEach(app => {
+    const tr = document.createElement("tr");
+    const fields = [
+      app.minecraft_username,
+      applicationNames[app.application_type] || app.application_type,
+      app.discord_username,
+      app.platform,
+      app.channel_url,
+      app.experience,
+      app.reason,
+      statusLabel(app.status)
+    ];
+
+    fields.forEach((value, index) => {
+      const td = document.createElement("td");
+
+      if (index === 4) {
+        const link = document.createElement("a");
+        link.href = value;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.textContent = "Profili aç";
+        td.appendChild(link);
+      } else {
+        td.textContent = value ?? "-";
+      }
+
+      tr.appendChild(td);
+    });
+
+    const action = document.createElement("td");
+
+    if (app.status === "pending") {
+      const approve = document.createElement("button");
+      approve.textContent = "Onayla";
+      approve.onclick = () => reviewApplication(app.id, "approved");
+
+      const reject = document.createElement("button");
+      reject.className = "danger";
+      reject.textContent = "Reddet";
+      reject.onclick = () => reviewApplication(app.id, "rejected");
+
+      action.append(approve, document.createTextNode(" "), reject);
+    } else {
+      action.textContent = "İncelendi";
+    }
+
+    tr.appendChild(action);
+    table.appendChild(tr);
+  });
+
+  area.replaceChildren(table);
 }
 
-function showAdminMessage(message) {
-  document.getElementById("adminMessage").textContent = message;
+async function reviewApplication(id, status) {
+  const note = prompt("Oyuncuya gösterilecek yönetici notu (isteğe bağlı):") ?? "";
+
+  const {data, error} = await db.rpc("review_application", {
+    p_application_id:id,
+    p_status:status,
+    p_note:note
+  });
+
+  if (error) {
+    alert("Başvuru güncellenemedi: " + error.message);
+    return;
+  }
+
+  alert(status === "approved" ? "Başvuru onaylandı." : "Başvuru reddedildi.");
+  await loadApplications();
+  await loadMyApplications();
+  await loadPlayerApplications();
 }
 
-db.auth.onAuthStateChange((event, session) => {
-  if (session?.user) {
-    currentUser = session.user;
-    setTimeout(() => refreshSession(), 0);
-  } else {
-    currentUser = null;
-    isAdmin = false;
-    currentPlayer = null;
+async function copyIP() {
+  if (SERVER_IP === "SUNUCU_IP_ADRESINI_BURAYA_YAZ") {
+    document.getElementById("ipMessage").textContent = "Önce HTML içindeki SERVER_IP alanına sunucu adresini yazmalısın.";
+    return;
+  }
 
-    document.getElementById("authArea").classList.remove("hidden");
-    document.getElementById("playerArea").classList.add("hidden");
-    document.getElementById("adminArea").classList.add("hidden");
+  try {
+    await navigator.clipboard.writeText(SERVER_IP);
+    document.getElementById("ipMessage").textContent = "Sunucu IP'si kopyalandı!";
+  } catch {
+    document.getElementById("ipMessage").textContent = "Kopyalama başarısız. IP: " + SERVER_IP;
+  }
+}
 
-    renderCart();
+renderRanks();
+renderCart();
+checkSession();
+
+db.auth.onAuthStateChange((_event, session) => {
+  currentUser = session?.user || null;
+  updateAuthUI();
+
+  if (currentUser) {
+    setTimeout(async () => {
+      await refreshPlayer();
+      await checkAdmin();
+      await loadMyApplications();
+      await loadPlayerApplications();
+    }, 0);
   }
 });
-
-(async function init() {
-  renderCart();
-
-  const { data } = await db.auth.getSession();
-
-  if (data.session?.user) {
-    currentUser = data.session.user;
-    await refreshSession();
-  }
-})();
 </script>
-
 </body>
 </html>
