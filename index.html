@@ -1,1713 +1,1078 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#09090d">
-<title>DarkSMP | Resmi Sunucu</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#090909">
+<title>DarkSMP | Minecraft Sunucusu</title>
+<meta name="description" content="DarkSMP resmi Minecraft sunucusu. Mağaza, oyuncu paneli, görevler ve topluluk.">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-:root{
---bg:#09090d;
---panel:#12141c;
---panel2:#191c26;
---line:#2a2e3b;
---red:#e21b3c;
---red2:#ff4967;
---text:#f4f5f8;
---muted:#969baa;
---green:#62d99a;
---gold:#f0c56d;
---max:1220px
+:root {
+  --bg:#080808;
+  --panel:#111111;
+  --panel2:#171717;
+  --red:#e32636;
+  --red2:#a90e20;
+  --text:#ffffff;
+  --muted:#999999;
+  --border:#292929;
+  --green:#28c76f;
+  --radius:15px;
 }
 
-*{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:90px}
-body{
-margin:0;
-background:radial-gradient(ellipse at 15% 0%,#32101c55,transparent 34%),var(--bg);
-color:var(--text);
-font-family:Inter,Arial,sans-serif
+* {
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
 }
 
-button,input,textarea,select{font:inherit}
-button{cursor:pointer}
-a{color:inherit;text-decoration:none}
-.hidden{display:none!important}
-
-.container{width:min(var(--max),calc(100% - 36px));margin:auto}
-.muted{color:var(--muted)}
-.section{padding:82px 0}
-.section.alt{background:#ffffff06;border-block:1px solid #ffffff0b}
-
-h1,h2,h3,p{margin-top:0}
-.heading{text-align:center;max-width:720px;margin:0 auto 38px}
-.heading small,.eyebrow{
-color:#ff8296;
-letter-spacing:1.5px;
-font-weight:800;
-font-size:11px
-}
-.heading h2{font-size:clamp(28px,4vw,44px);margin:13px 0}
-.heading p{color:var(--muted);line-height:1.8}
-.gradient{
-background:linear-gradient(100deg,#fff,#ff647e);
-color:transparent;
-background-clip:text
+html {
+  scroll-behavior:smooth;
 }
 
-.btn{
-border:0;
-border-radius:9px;
-padding:13px 18px;
-background:linear-gradient(130deg,var(--red2),#a20e2b);
-color:#fff;
-font-weight:800;
-font-size:12px;
-transition:.2s;
-box-shadow:0 8px 22px #e21b3c24
-}
-.btn:hover{transform:translateY(-2px);filter:brightness(1.1)}
-.btn.secondary{background:#202430;border:1px solid var(--line);box-shadow:none}
-.btn.ghost{background:transparent;border:1px solid var(--line);box-shadow:none;color:#c3c7d1}
-.btn.small{padding:9px 12px;font-size:11px}
-.btn.block{width:100%}
-.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
-
-header{
-position:sticky;
-top:0;
-z-index:30;
-background:#09090de8;
-backdrop-filter:blur(18px);
-border-bottom:1px solid #ffffff10
-}
-.nav{
-height:74px;
-display:flex;
-align-items:center;
-justify-content:space-between;
-gap:20px
-}
-.brand{
-display:flex;
-align-items:center;
-gap:10px;
-font-weight:1000;
-letter-spacing:1.5px
-}
-.brandmark{
-width:38px;
-height:38px;
-border-radius:11px;
-display:grid;
-place-items:center;
-background:linear-gradient(140deg,#ff526e,#7e0c25);
-box-shadow:0 6px 20px #e21b3c44
-}
-.brand span:last-child b{color:var(--red2)}
-.links{display:flex;gap:19px}
-.links a{font-size:11px;color:#b9bdc8;font-weight:700}
-.links a:hover{color:#fff}
-
-.actions{display:flex;align-items:center;gap:9px}
-.balance{
-padding:10px 12px;
-border:1px solid #813044;
-background:#e21b3c16;
-color:#ff8799;
-border-radius:9px;
-font-size:11px;
-font-weight:900;
-white-space:nowrap
-}
-.menu{
-display:none;
-background:#191c26;
-border:1px solid var(--line);
-color:#fff;
-border-radius:8px;
-padding:9px 12px
-}
-.mobilelinks{
-display:none;
-padding:0 18px 15px;
-grid-template-columns:repeat(2,1fr);
-gap:8px
-}
-.mobilelinks.open{display:grid}
-.mobilelinks a{
-padding:10px;
-border:1px solid var(--line);
-border-radius:8px;
-font-size:12px;
-color:#c5c8d2
+body {
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,Arial,sans-serif;
+  min-height:100vh;
 }
 
-.hero{
-min-height:590px;
-display:flex;
-align-items:center;
-position:relative;
-overflow:hidden;
-border-bottom:1px solid #ffffff10;
-background:
-linear-gradient(90deg,#09090df5 0%,#09090dcf 60%,#09090d88),
-radial-gradient(circle at 78% 48%,#b30e374d,transparent 35%),
-linear-gradient(135deg,#1d111a,#09090d)
-}
-.hero:after{
-content:"";
-position:absolute;
-inset:0;
-pointer-events:none;
-opacity:.13;
-background-image:
-linear-gradient(#fff1 1px,transparent 1px),
-linear-gradient(90deg,#fff1 1px,transparent 1px);
-background-size:42px 42px
-}
-.orb{
-position:absolute;
-right:8%;
-top:15%;
-width:390px;
-height:390px;
-border:1px solid #ff49672b;
-border-radius:50%;
-box-shadow:0 0 100px #e21b3c22,inset 0 0 80px #e21b3c16
-}
-.orb:before,.orb:after{
-content:"";
-position:absolute;
-inset:35px;
-border:1px solid #ff496722;
-border-radius:50%
-}
-.orb:after{inset:85px}
-
-.hero-content{
-position:relative;
-z-index:2;
-padding:95px 0;
-max-width:var(--max);
-width:calc(100% - 36px);
-margin:auto
-}
-.hero h1{
-font-size:clamp(48px,8vw,91px);
-line-height:.98;
-letter-spacing:-4px;
-margin:22px 0;
-font-weight:1000
-}
-.hero h1 span{
-display:block;
-color:var(--red2);
-text-shadow:0 10px 45px #e21b3c33
-}
-.hero p{
-max-width:590px;
-color:#b9bdc8;
-line-height:1.9;
-font-size:14px
-}
-.hero-buttons{display:flex;gap:11px;flex-wrap:wrap;margin:28px 0}
-.chips{display:flex;gap:8px;flex-wrap:wrap}
-.chip{
-padding:9px 11px;
-border:1px solid #ffffff18;
-background:#ffffff08;
-border-radius:8px;
-font-size:10px;
-color:#d0d3dc
-}
-.stats{display:flex;gap:32px;margin-top:40px;flex-wrap:wrap}
-.stat strong{display:block;font-size:22px}
-.stat span{font-size:10px;color:var(--muted)}
-
-.grid{display:grid;gap:16px}
-.three{grid-template-columns:repeat(3,minmax(0,1fr))}
-.two{grid-template-columns:repeat(2,minmax(0,1fr))}
-.four{grid-template-columns:repeat(4,minmax(0,1fr))}
-
-.card,.panel{
-border:1px solid var(--line);
-background:linear-gradient(145deg,#1a1e29,#11131a);
-border-radius:15px;
-padding:22px;
-transition:.2s
-}
-.card:hover{
-transform:translateY(-3px);
-border-color:#743044;
-box-shadow:0 16px 40px #0005
-}
-.card h3{font-size:17px;margin:12px 0 8px}
-.card p{font-size:12px;color:var(--muted);line-height:1.8}
-.icon{
-width:48px;
-height:48px;
-border-radius:13px;
-display:grid;
-place-items:center;
-background:#e21b3c1c;
-font-size:23px
+button,input,textarea,select {
+  font:inherit;
 }
 
-.rank{padding:0;overflow:hidden;position:relative}
-.rankbody{padding:22px}
-.ranktop{display:flex;justify-content:space-between;align-items:center}
-.rank h3{font-size:21px;margin:17px 0 7px}
-.rankdesc{min-height:40px}
-.price{font-size:27px;color:#ff7189;font-weight:900;margin:17px 0}
-.price small{font-size:10px;color:var(--muted)}
-.perks{list-style:none;padding:0;margin:12px 0}
-.perks li{
-font-size:11px;
-color:#bfc3ce;
-padding:7px 0;
-border-bottom:1px solid #ffffff0a
-}
-.perks li:before{content:"✓";color:var(--green);margin-right:8px}
-.rankfoot{padding:0 22px 22px}
-.featured{border-color:#9e3048;box-shadow:0 0 28px #e21b3c16}
-.ribbon{
-position:absolute;
-right:-30px;
-top:15px;
-transform:rotate(40deg);
-background:var(--red);
-padding:7px 34px;
-font-size:9px;
-font-weight:900
+button {
+  cursor:pointer;
 }
 
-.paneltitle{
-display:flex;
-align-items:center;
-justify-content:space-between;
-gap:10px;
-margin-bottom:17px
-}
-.paneltitle h3{margin:0;font-size:16px}
-.cartline{
-display:flex;
-justify-content:space-between;
-align-items:center;
-gap:10px;
-border-bottom:1px solid var(--line);
-padding:12px 0;
-font-size:12px
-}
-.carttotal{
-display:flex;
-align-items:center;
-justify-content:space-between;
-margin-top:18px;
-font-weight:900
+a {
+  color:inherit;
+  text-decoration:none;
 }
 
-.field{margin-bottom:13px}
-.field label{
-display:block;
-font-size:11px;
-font-weight:800;
-color:#c6cad4;
-margin-bottom:7px
-}
-.field input,.field select,.field textarea{
-width:100%;
-padding:13px;
-background:#090b11;
-border:1px solid #303543;
-border-radius:8px;
-color:white;
-outline:none
-}
-.field input:focus,.field textarea:focus,.field select:focus{
-border-color:var(--red);
-box-shadow:0 0 0 3px #e21b3c14
-}
-.field textarea{min-height:105px;resize:vertical;line-height:1.6}
-.field option{background:#11141c}
-
-.note{font-size:11px;color:var(--muted);line-height:1.8}
-.message{
-padding:12px;
-border-radius:8px;
-margin-top:12px;
-font-size:12px;
-line-height:1.6
-}
-.error{background:#e21b3c18;color:#ff9aaa}
-.success{background:#56d68b16;color:#8ce5ad}
-.info{background:#75aaff16;color:#a8c9ff}
-
-.reward{
-text-align:center;
-max-width:700px;
-margin:auto;
-padding:38px;
-background:radial-gradient(circle at 50% 0,#e21b3c28,transparent 65%),#131620;
-border:1px solid #673044;
-border-radius:18px
-}
-.gift{font-size:55px}
-.streak{color:#ff8397;font-size:13px;font-weight:900;margin:17px}
-
-.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.metric{
-padding:17px;
-background:#0c0f16;
-border:1px solid var(--line);
-border-radius:10px
-}
-.metric span{font-size:9px;color:var(--muted);font-weight:800}
-.metric strong{display:block;font-size:22px;margin-top:8px}
-
-.profile{display:flex;align-items:center;gap:13px;margin-bottom:22px}
-.avatar{
-width:50px;
-height:50px;
-border-radius:13px;
-background:linear-gradient(140deg,#ff4967,#7e0c25);
-display:grid;
-place-items:center;
-font-weight:1000;
-font-size:21px
-}
-.tablewrap{overflow:auto}
-table{width:100%;border-collapse:collapse;min-width:480px}
-th,td{text-align:left;padding:12px;border-bottom:1px solid var(--line);font-size:11px}
-th{color:var(--muted);font-size:9px;text-transform:uppercase}
-
-.status{padding:5px 8px;border-radius:99px;background:#ffffff12;font-size:10px}
-.pending{color:var(--gold);background:#f0c56d18}
-.approved{color:var(--green);background:#62d99a18}
-.rejected{color:#ff899b;background:#e21b3c18}
-
-.server{
-text-align:center;
-padding:35px;
-background:radial-gradient(circle at 50% 0,#e21b3c22,transparent 65%),#131620
-}
-.serverip{
-font-size:clamp(18px,3vw,28px);
-font-weight:1000;
-letter-spacing:1px;
-margin:18px 0;
-word-break:break-word
+.container {
+  width:min(1200px,92%);
+  margin:auto;
 }
 
-.faq{max-width:800px;margin:auto}
-.faqitem{
-border:1px solid var(--line);
-border-radius:10px;
-background:#12151d;
-margin-bottom:9px;
-overflow:hidden
-}
-.faqq{
-width:100%;
-padding:17px;
-border:0;
-background:none;
-color:white;
-text-align:left;
-display:flex;
-justify-content:space-between;
-font-weight:800;
-font-size:12px
-}
-.faqa{
-display:none;
-padding:0 17px 17px;
-color:var(--muted);
-font-size:12px;
-line-height:1.8
-}
-.faqitem.open .faqa{display:block}
-
-footer{padding:43px 0 22px;border-top:1px solid var(--line);background:#07080b}
-.footgrid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:30px}
-.footgrid h4{font-size:12px}
-.footgrid p,.footgrid a{color:var(--muted);font-size:11px;line-height:1.9}
-.footlinks{display:grid;gap:5px}
-.footbottom{
-display:flex;
-justify-content:space-between;
-gap:12px;
-border-top:1px solid var(--line);
-padding-top:18px;
-margin-top:30px;
-color:#707686;
-font-size:10px
+.hidden {
+  display:none!important;
 }
 
-.backdrop{
-position:fixed;
-inset:0;
-z-index:100;
-background:#000c;
-backdrop-filter:blur(7px);
-display:grid;
-place-items:center;
-padding:16px
-}
-.modal{
-width:min(460px,100%);
-max-height:90vh;
-overflow:auto;
-background:#151923;
-border:1px solid #3a4050;
-border-radius:16px;
-padding:23px;
-box-shadow:0 30px 100px #0009
-}
-.modalhead{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:18px
-}
-.modalhead h3{margin:0}
-.close{border:0;background:none;color:white;font-size:25px}
-.tabs{display:flex;gap:8px;margin-bottom:18px}
-.tabs button{flex:1}
-
-.toastwrap{
-position:fixed;
-right:18px;
-bottom:18px;
-z-index:150;
-display:grid;
-gap:8px;
-width:min(340px,calc(100% - 36px))
-}
-.toast{
-padding:13px 15px;
-background:#1b202b;
-border:1px solid #414858;
-border-left:3px solid var(--red);
-border-radius:9px;
-font-size:12px;
-box-shadow:0 10px 30px #0008
+.muted {
+  color:var(--muted);
 }
 
-/* TOPLULUK SİSTEMLERİ */
-.data-grid{
-display:grid;
-grid-template-columns:repeat(2,minmax(0,1fr));
-gap:16px
-}
-.data-card{
-background:var(--panel);
-border:1px solid var(--line);
-border-radius:14px;
-padding:20px;
-min-width:0
-}
-.data-card h3{margin:0 0 14px}
-.data-list{display:grid;gap:9px}
-.data-row{
-display:flex;
-align-items:center;
-justify-content:space-between;
-gap:12px;
-padding:11px 12px;
-background:#ffffff08;
-border:1px solid #ffffff0c;
-border-radius:9px
-}
-.data-row small,.subtle{color:var(--muted)}
-.data-row strong{overflow-wrap:anywhere}
-.empty-state{
-padding:16px;
-border:1px dashed var(--line);
-border-radius:10px;
-color:var(--muted);
-font-size:13px
-}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.skin-avatar{
-width:72px;
-height:72px;
-image-rendering:pixelated;
-border-radius:10px;
-background:#202330
+.red {
+  color:var(--red);
 }
 
-/* EK TOPLULUK ÖZELLİKLERİ */
-.extra-grid{
-display:grid;
-grid-template-columns:repeat(2,minmax(0,1fr));
-gap:16px
-}
-.extra-card{
-background:var(--panel);
-border:1px solid var(--line);
-border-radius:15px;
-padding:22px;
-min-width:0
-}
-.extra-card h3{margin:0 0 12px}
-.extra-card p{color:var(--muted);font-size:13px;line-height:1.7}
-.xp-track{
-height:10px;
-border-radius:99px;
-background:#ffffff12;
-overflow:hidden;
-margin:12px 0
-}
-.xp-fill{
-height:100%;
-width:42%;
-background:linear-gradient(90deg,var(--red),#ff7184);
-border-radius:99px
-}
-.event-item,.clan-item,.comment-item{
-padding:13px;
-border:1px solid var(--line);
-border-radius:10px;
-background:#ffffff06;
-margin-top:9px
-}
-.event-item small,.comment-item small{color:var(--muted)}
-.wheel-result{
-font-size:20px;
-font-weight:800;
-text-align:center;
-padding:20px;
-border:1px dashed #8b3445;
-border-radius:12px;
-margin:14px 0;
-color:#ff9aaa
-}
-.wheel-disc{
-width:170px;
-height:170px;
-border-radius:50%;
-margin:12px auto;
-background:conic-gradient(
-#b51225 0 45deg,
-#252a36 45deg 90deg,
-#b51225 90deg 135deg,
-#252a36 135deg 180deg,
-#b51225 180deg 225deg,
-#252a36 225deg 270deg,
-#b51225 270deg 315deg,
-#252a36 315deg
-);
-border:7px solid #d8b0b7;
-box-shadow:0 0 30px #b5122540;
-display:grid;
-place-items:center;
-font-size:38px
-}
-.demo-note{
-font-size:11px!important;
-color:#e7b75b!important;
-border-left:3px solid #e7b75b;
-padding:8px 10px;
-background:#e7b75b10;
-border-radius:4px
+.section {
+  padding:65px 0;
 }
 
-/* ÖZEL MESAJLAR */
-#privateMessageList{
-max-height:560px;
-overflow:auto;
-display:grid;
-gap:9px
-}
-.dm-item{
-padding:13px;
-border:1px solid var(--line);
-border-radius:10px;
-background:#ffffff06;
-overflow-wrap:anywhere
-}
-.dm-item.incoming{border-left:3px solid #62d99a}
-.dm-item.outgoing{border-left:3px solid #ff7189}
-.dm-item p{
-white-space:pre-wrap;
-line-height:1.65;
-margin:8px 0;
-color:#e5e7ed;
-font-size:13px
-}
-.dm-meta{
-font-size:10px;
-color:var(--muted);
-display:flex;
-justify-content:space-between;
-gap:8px;
-flex-wrap:wrap
+.section-title {
+  font-size:30px;
+  font-weight:900;
+  margin-bottom:12px;
 }
 
-@media(max-width:1000px){
-.links{gap:10px}
-.links a{font-size:10px}
-.four{grid-template-columns:repeat(2,1fr)}
+.section-desc {
+  color:var(--muted);
+  margin-bottom:30px;
+  line-height:1.7;
 }
-@media(max-width:800px){
-.links{display:none}
-.menu{display:block}
-.three{grid-template-columns:repeat(2,1fr)}
-.orb{right:-170px;opacity:.5}
-.footgrid{grid-template-columns:1fr 1fr}
+
+.topbar {
+  background:#050505;
+  border-bottom:1px solid var(--border);
+  padding:10px 0;
+  font-size:12px;
+  color:#aaa;
 }
-@media(max-width:700px){
-.data-grid,.form-grid,.extra-grid{grid-template-columns:1fr}
+
+.topbar .container {
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  flex-wrap:wrap;
 }
-@media(max-width:580px){
-.container{width:calc(100% - 28px)}
-.section{padding:62px 0}
-.nav{height:66px}
-.brand{font-size:13px}
-.balance{font-size:9px;padding:9px}
-.actions>.btn{font-size:9px;padding:9px}
-.hero{min-height:560px}
-.hero h1{letter-spacing:-2px}
-.hero p{font-size:12px}
-.three,.two,.four{grid-template-columns:1fr}
-.metrics{grid-template-columns:repeat(2,1fr)}
-.footgrid{grid-template-columns:1fr}
-.footbottom{flex-direction:column}
-.panel{padding:17px}
-.reward{padding:28px 16px}
+
+.navbar {
+  background:rgba(10,10,10,.96);
+  border-bottom:1px solid var(--border);
+  position:sticky;
+  top:0;
+  z-index:100;
+  backdrop-filter:blur(15px);
+}
+
+.nav-inner {
+  min-height:75px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+}
+
+.logo {
+  font-size:23px;
+  font-weight:900;
+  letter-spacing:-1px;
+}
+
+.logo span {
+  color:var(--red);
+}
+
+.nav-links {
+  display:flex;
+  align-items:center;
+  gap:24px;
+}
+
+.nav-links a {
+  font-size:13px;
+  color:#bbb;
+  transition:.2s;
+}
+
+.nav-links a:hover {
+  color:var(--red);
+}
+
+.nav-actions {
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.btn {
+  border:1px solid var(--border);
+  background:var(--panel2);
+  color:white;
+  padding:12px 18px;
+  border-radius:9px;
+  font-weight:700;
+  font-size:13px;
+  transition:.2s;
+}
+
+.btn:hover {
+  border-color:var(--red);
+  transform:translateY(-2px);
+}
+
+.btn-primary {
+  background:var(--red);
+  border-color:var(--red);
+}
+
+.btn-primary:hover {
+  background:#bd1728;
+}
+
+.btn-small {
+  padding:9px 13px;
+  font-size:12px;
+}
+
+.mobile-toggle {
+  display:none;
+}
+
+.hero {
+  min-height:570px;
+  display:flex;
+  align-items:center;
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(ellipse at 75% 45%,rgba(227,38,54,.2),transparent 40%),
+    linear-gradient(120deg,#080808,#16090b 60%,#080808);
+}
+
+.hero::before {
+  content:"";
+  position:absolute;
+  width:450px;
+  height:450px;
+  right:5%;
+  top:50px;
+  border:1px solid rgba(227,38,54,.18);
+  border-radius:50%;
+  box-shadow:0 0 100px rgba(227,38,54,.12);
+}
+
+.hero-content {
+  position:relative;
+  z-index:2;
+  max-width:700px;
+}
+
+.hero-tag {
+  display:inline-block;
+  color:#ff6875;
+  background:rgba(227,38,54,.12);
+  border:1px solid rgba(227,38,54,.3);
+  border-radius:30px;
+  padding:9px 14px;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:1px;
+  margin-bottom:25px;
+}
+
+.hero h1 {
+  font-size:clamp(45px,7vw,85px);
+  line-height:1;
+  font-weight:900;
+  letter-spacing:-4px;
+  margin-bottom:25px;
+}
+
+.hero h1 span {
+  color:var(--red);
+}
+
+.hero p {
+  max-width:570px;
+  color:#aaa;
+  line-height:1.8;
+  margin-bottom:30px;
+}
+
+.hero-buttons {
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.stats {
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+  margin-top:-35px;
+  position:relative;
+  z-index:5;
+}
+
+.stat {
+  background:var(--panel);
+  border:1px solid var(--border);
+  padding:23px;
+  border-radius:var(--radius);
+  text-align:center;
+}
+
+.stat strong {
+  display:block;
+  font-size:26px;
+  color:var(--red);
+  margin-bottom:8px;
+}
+
+.stat span {
+  color:var(--muted);
+  font-size:12px;
+}
+
+.grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+}
+
+.card {
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:23px;
+  transition:.25s;
+}
+
+.card:hover {
+  border-color:rgba(227,38,54,.65);
+  transform:translateY(-4px);
+}
+
+.card-icon {
+  width:45px;
+  height:45px;
+  border-radius:12px;
+  display:grid;
+  place-items:center;
+  background:rgba(227,38,54,.12);
+  color:#ff6472;
+  font-size:21px;
+  margin-bottom:17px;
+}
+
+.card h3 {
+  font-size:17px;
+  margin-bottom:10px;
+}
+
+.card p {
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.7;
+}
+
+.store-grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+}
+
+.rank-card {
+  background:linear-gradient(145deg,#151515,#0d0d0d);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:25px;
+  position:relative;
+  overflow:hidden;
+}
+
+.rank-card::after {
+  content:"";
+  position:absolute;
+  width:120px;
+  height:120px;
+  right:-50px;
+  top:-50px;
+  background:rgba(227,38,54,.1);
+  border-radius:50%;
+}
+
+.rank-name {
+  font-size:21px;
+  font-weight:900;
+  margin-bottom:8px;
+}
+
+.rank-price {
+  color:var(--red);
+  font-size:29px;
+  font-weight:900;
+  margin:18px 0;
+}
+
+.rank-card ul {
+  list-style:none;
+  color:#aaa;
+  font-size:13px;
+  line-height:2.2;
+  margin-bottom:20px;
+}
+
+.rank-card li::before {
+  content:"✓ ";
+  color:var(--green);
+}
+
+.panel-layout {
+  display:grid;
+  grid-template-columns:250px 1fr;
+  gap:20px;
+}
+
+.sidebar {
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:18px;
+  height:max-content;
+}
+
+.sidebar button {
+  display:block;
+  width:100%;
+  text-align:left;
+  padding:13px;
+  margin-bottom:5px;
+  color:#aaa;
+  background:transparent;
+  border:0;
+  border-radius:8px;
+}
+
+.sidebar button:hover,
+.sidebar button.active {
+  background:rgba(227,38,54,.13);
+  color:white;
+}
+
+.panel-content {
+  min-width:0;
+}
+
+.panel-box {
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:25px;
+  margin-bottom:18px;
+}
+
+.panel-box h3 {
+  margin-bottom:18px;
+}
+
+.balance {
+  font-size:35px;
+  color:var(--red);
+  font-weight:900;
+  margin:10px 0;
+}
+
+.form-group {
+  margin-bottom:16px;
+}
+
+.form-group label {
+  display:block;
+  color:#bbb;
+  font-size:12px;
+  margin-bottom:8px;
+}
+
+.form-control {
+  width:100%;
+  background:#080808;
+  color:white;
+  border:1px solid var(--border);
+  border-radius:9px;
+  padding:13px;
+  outline:none;
+}
+
+.form-control:focus {
+  border-color:var(--red);
+}
+
+textarea.form-control {
+  min-height:110px;
+  resize:vertical;
+}
+
+.table-wrap {
+  overflow-x:auto;
+}
+
+table {
+  width:100%;
+  border-collapse:collapse;
+  min-width:400px;
+}
+
+th,td {
+  padding:14px;
+  text-align:left;
+  border-bottom:1px solid var(--border);
+  font-size:13px;
+}
+
+th {
+  color:#ff6875;
+}
+
+td {
+  color:#bbb;
+}
+
+.badge {
+  display:inline-block;
+  padding:6px 9px;
+  border-radius:6px;
+  background:rgba(227,38,54,.12);
+  color:#ff6977;
+  font-size:11px;
+  font-weight:800;
+}
+
+.progress {
+  width:100%;
+  height:9px;
+  background:#292929;
+  border-radius:20px;
+  overflow:hidden;
+  margin:12px 0;
+}
+
+.progress span {
+  display:block;
+  height:100%;
+  background:var(--red);
+  width:0;
+}
+
+.faq-item {
+  border:1px solid var(--border);
+  background:var(--panel);
+  border-radius:10px;
+  margin-bottom:10px;
+  overflow:hidden;
+}
+
+.faq-question {
+  width:100%;
+  background:transparent;
+  border:0;
+  color:white;
+  padding:18px;
+  text-align:left;
+  display:flex;
+  justify-content:space-between;
+  font-weight:700;
+}
+
+.faq-answer {
+  display:none;
+  color:#aaa;
+  padding:0 18px 18px;
+  font-size:13px;
+  line-height:1.7;
+}
+
+.faq-item.open .faq-answer {
+  display:block;
+}
+
+.footer {
+  background:#050505;
+  border-top:1px solid var(--border);
+  padding:45px 0;
+  margin-top:50px;
+}
+
+.footer-grid {
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr;
+  gap:30px;
+}
+
+.footer p,.footer a {
+  color:#888;
+  font-size:13px;
+  line-height:2;
+}
+
+.footer h4 {
+  margin-bottom:12px;
+}
+
+.modal {
+  position:fixed;
+  inset:0;
+  z-index:500;
+  background:rgba(0,0,0,.85);
+  display:grid;
+  place-items:center;
+  padding:15px;
+}
+
+.modal-box {
+  width:min(440px,100%);
+  background:#111;
+  border:1px solid #333;
+  border-radius:17px;
+  padding:25px;
+  max-height:90vh;
+  overflow-y:auto;
+}
+
+.modal-head {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:22px;
+}
+
+.modal-close {
+  background:transparent;
+  color:white;
+  border:0;
+  font-size:25px;
+}
+
+.tabs {
+  display:flex;
+  gap:8px;
+  margin-bottom:20px;
+}
+
+.tabs button {
+  flex:1;
+}
+
+.toast-container {
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  z-index:1000;
+  display:grid;
+  gap:10px;
+}
+
+.toast {
+  background:#191919;
+  border:1px solid #444;
+  border-left:4px solid var(--red);
+  border-radius:8px;
+  padding:15px 18px;
+  max-width:330px;
+  font-size:13px;
+  box-shadow:0 10px 30px #0008;
+}
+
+.empty-state {
+  text-align:center;
+  color:#888;
+  padding:30px;
+}
+
+.mobile-menu {
+  display:none;
+  padding:15px 0;
+  border-top:1px solid var(--border);
+}
+
+.mobile-menu a {
+  display:block;
+  padding:12px;
+  color:#bbb;
+}
+
+@media(max-width:850px) {
+  .nav-links {
+    display:none;
+  }
+
+  .mobile-toggle {
+    display:block;
+  }
+
+  .mobile-menu.open {
+    display:block;
+  }
+
+  .stats {
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .grid,.store-grid {
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .panel-layout {
+    grid-template-columns:1fr;
+  }
+
+  .footer-grid {
+    grid-template-columns:1fr 1fr;
+  }
+}
+
+@media(max-width:550px) {
+  .hero {
+    min-height:520px;
+  }
+
+  .hero h1 {
+    letter-spacing:-2px;
+  }
+
+  .grid,.store-grid {
+    grid-template-columns:1fr;
+  }
+
+  .stats {
+    gap:8px;
+  }
+
+  .stat {
+    padding:15px 8px;
+  }
+
+  .stat strong {
+    font-size:21px;
+  }
+
+  .footer-grid {
+    grid-template-columns:1fr;
+  }
+
+  .nav-actions .btn {
+    padding:9px 10px;
+    font-size:11px;
+  }
 }
 </style>
 </head>
-<body> 
-<!-- NAVBAR -->
-<header>
-  <div class="container nav">
-    <a href="#anasayfa" class="brand">
-      <span class="brandmark">⚔</span>
-      <span>DARK<b>SMP</b></span>
-    </a>
 
-    <nav class="links">
-      <a href="#anasayfa">Ana Sayfa</a>
-      <a href="#ozellikler">Özellikler</a>
-      <a href="#magaza">Mağaza</a>
-      <a href="#topluluk">Topluluk</a>
-      <a href="#basvuru">Başvurular</a>
-      <a href="#destek">Destek</a>
+<body>
+
+<div class="topbar">
+  <div class="container">
+    <span>⚔ DARKSMP RESMİ SUNUCU</span>
+    <span id="serverStatus">Sunucu durumu: Kontrol edilmedi</span>
+  </div>
+</div>
+
+<header class="navbar">
+  <div class="container nav-inner">
+    <a href="#home" class="logo">DARK<span>SMP</span></a>
+
+    <nav class="nav-links">
+      <a href="#home">Ana Sayfa</a>
+      <a href="#features">Özellikler</a>
+      <a href="#store">Mağaza</a>
+      <a href="#leaderboard">Sıralama</a>
+      <a href="#faq">SSS</a>
     </nav>
 
-    <div class="actions">
-      <div class="balance">🪙 <span id="navPoints">0</span> Puan</div>
-      <button class="btn small" id="loginButton" onclick="openAuthModal()">Giriş Yap</button>
-      <button class="menu" onclick="toggleMobileMenu()">☰</button>
+    <div class="nav-actions">
+      <button class="btn btn-small" id="loginOpen">Giriş Yap</button>
+      <button class="btn btn-primary btn-small" id="panelOpen">Hesabım</button>
+      <button class="btn btn-small mobile-toggle" id="mobileToggle">☰</button>
     </div>
   </div>
 
-  <div class="mobilelinks" id="mobileMenu">
-    <a href="#anasayfa">Ana Sayfa</a>
-    <a href="#ozellikler">Özellikler</a>
-    <a href="#magaza">Mağaza</a>
-    <a href="#topluluk">Topluluk</a>
-    <a href="#basvuru">Başvurular</a>
-    <a href="#destek">Destek</a>
+  <div class="container mobile-menu" id="mobileMenu">
+    <a href="#home">Ana Sayfa</a>
+    <a href="#features">Özellikler</a>
+    <a href="#store">Mağaza</a>
+    <a href="#leaderboard">Sıralama</a>
+    <a href="#faq">SSS</a>
   </div>
 </header>
 
-<!-- ANA SAYFA -->
 <main>
-<section class="hero" id="anasayfa">
-  <div class="orb"></div>
 
-  <div class="hero-content">
-    <div class="eyebrow">✦ DARKSMP RESMİ SUNUCUSU</div>
-
-    <h1>
-      KENDİ
-      <span>HİKÂYENİ</span>
-      YAZ.
-    </h1>
-
+<section class="hero" id="home">
+  <div class="container hero-content">
+    <div class="hero-tag">✦ YENİ NESİL MINECRAFT DENEYİMİ</div>
+    <h1>WELCOME TO<br><span>DARKSMP</span></h1>
     <p>
-      DarkSMP dünyasına katıl, arkadaşlarınla maceralara atıl,
-      ekonomini geliştir, kendi imparatorluğunu kur ve
-      sunucunun en güçlü oyuncularından biri ol!
+      Kendi hikâyeni yaz, ekonomini geliştir, arkadaşlarınla
+      mücadele et ve DarkSMP dünyasında yerini al.
+    </p>
+    <div class="hero-buttons">
+      <button class="btn btn-primary" id="copyIP">IP ADRESİNİ KOPYALA</button>
+      <a class="btn" href="#store">MAĞAZAYI KEŞFET</a>
+    </div>
+    <p style="margin-top:20px;font-size:12px">
+      Sunucu IP: <strong id="serverAddress">SUNUCU_ADRESINI_BURAYA_YAZ</strong>
+    </p>
+  </div>
+</section>
+
+<div class="container stats">
+  <div class="stat">
+    <strong id="statPlayers">0</strong>
+    <span>Oyuncu</span>
+  </div>
+  <div class="stat">
+    <strong>24/7</strong>
+    <span>Aktif Dünya</span>
+  </div>
+  <div class="stat">
+    <strong>9</strong>
+    <span>Özel Rütbe</span>
+  </div>
+  <div class="stat">
+    <strong>1.21.11</strong>
+    <span>Minecraft Sürümü</span>
+  </div>
+</div>
+
+<section class="section" id="features">
+  <div class="container">
+    <h2 class="section-title">Neden <span class="red">DarkSMP?</span></h2>
+    <p class="section-desc">Macera, ekonomi ve topluluk tek bir yerde.</p>
+
+    <div class="grid">
+      <article class="card">
+        <div class="card-icon">⚔</div>
+        <h3>Özel PvP</h3>
+        <p>Belirlenmiş savaş alanlarında diğer oyuncularla mücadele et.</p>
+      </article>
+
+      <article class="card">
+        <div class="card-icon">◆</div>
+        <h3>Oyuncu Ekonomisi</h3>
+        <p>Alışveriş yap, ticaret kur ve kendi ekonomini geliştir.</p>
+      </article>
+
+      <article class="card">
+        <div class="card-icon">♛</div>
+        <h3>Özel Rütbeler</h3>
+        <p>DarkSMP rütbelerini keşfet ve hesabını kişiselleştir.</p>
+      </article>
+
+      <article class="card">
+        <div class="card-icon">🏆</div>
+        <h3>Görevler</h3>
+        <p>Görevlerini takip et ve topluluk etkinliklerine katıl.</p>
+      </article>
+
+      <article class="card">
+        <div class="card-icon">🌍</div>
+        <h3>Farklı Dünyalar</h3>
+        <p>Sunucunun farklı dünyalarında yeni maceralara atıl.</p>
+      </article>
+
+      <article class="card">
+        <div class="card-icon">🛡</div>
+        <h3>Topluluk</h3>
+        <p>Oyuncularla tanış, etkinliklere katıl ve birlikte geliş.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="store">
+  <div class="container">
+    <h2 class="section-title">DarkSMP <span class="red">Mağaza</span></h2>
+    <p class="section-desc">
+      Rütbeleri incele. Fiyatlar puan üzerinden gösterilir.
+      Satın alma işlemi veritabanı bağlantısı tamamlandığında açılacaktır.
     </p>
 
-    <div class="hero-buttons">
-      <a href="#sunucu" class="btn">SUNUCUYA KATIL →</a>
-      <a href="#magaza" class="btn secondary">MAĞAZAYI KEŞFET</a>
-    </div>
+    <div class="store-grid" id="rankGrid"></div>
 
-    <div class="chips">
-      <span class="chip">⚔ Özel PvP</span>
-      <span class="chip">💰 Ekonomi</span>
-      <span class="chip">🏆 Rekabet</span>
-      <span class="chip">🎁 Ödüller</span>
-    </div>
-
-    <div class="stats">
-      <div class="stat">
-        <strong id="heroPlayerCount">0</strong>
-        <span>KAYITLI OYUNCU</span>
-      </div>
-      <div class="stat">
-        <strong>7/24</strong>
-        <span>MACERA</span>
-      </div>
-      <div class="stat">
-        <strong>1.21+</strong>
-        <span>MINECRAFT</span>
-      </div>
+    <div class="panel-box" style="margin-top:25px">
+      <h3>🛒 Sepetim</h3>
+      <div id="cartItems" class="empty-state">Sepetiniz boş.</div>
+      <p style="margin:15px 0">Toplam: <strong class="red" id="cartTotal">0 puan</strong></p>
+      <button class="btn btn-primary" id="purchaseButton">Satın Alma İşlemine Devam Et</button>
     </div>
   </div>
 </section>
 
-<!-- ÖZELLİKLER -->
-<section class="section" id="ozellikler">
+<section class="section" id="panel">
   <div class="container">
-    <div class="heading">
-      <small>DARKSMP DÜNYASI</small>
-      <h2>Burada Sıradanlık <span class="gradient">Yok.</span></h2>
-      <p>
-        DarkSMP'de seni bekleyen sistemleri keşfet.
-        Her oyuncunun kendi hikâyesi ve hedefi var.
-      </p>
-    </div>
+    <h2 class="section-title">Oyuncu <span class="red">Paneli</span></h2>
+    <p class="section-desc">Hesabını ve oyuncu bilgilerini buradan yönet.</p>
 
-    <div class="grid three">
-      <div class="card">
-        <div class="icon">⚔️</div>
-        <h3>Rekabetçi PvP</h3>
-        <p>Diğer oyuncularla mücadele et, yeteneklerini göster ve zirveye ulaş.</p>
-      </div>
+    <div class="panel-layout">
+      <aside class="sidebar">
+        <button class="active" data-tab="overview">▣ Genel Bakış</button>
+        <button data-tab="profile">◉ Profilim</button>
+        <button data-tab="wallet">◆ Puan Cüzdanım</button>
+        <button data-tab="daily">☀ Günlük Ödül</button>
+        <button data-tab="quests">⚑ Görevler</button>
+        <button data-tab="achievements">🏆 Başarımlar</button>
+        <button data-tab="applications">✉ Başvurular</button>
+      </aside>
 
-      <div class="card">
-        <div class="icon">💰</div>
-        <h3>Gelişmiş Ekonomi</h3>
-        <p>Alışveriş yap, ticaret kur ve kendi ekonomik gücünü oluştur.</p>
-      </div>
+      <div class="panel-content">
+        <div class="panel-box panel-tab" id="tab-overview">
+          <h3>Hoş geldin!</h3>
+          <p class="muted" id="welcomeText">Devam etmek için hesabına giriş yap.</p>
+          <div class="balance" id="panelBalance">0 puan</div>
+          <p class="muted">Mevcut puan bakiyesi</p>
+        </div>
 
-      <div class="card">
-        <div class="icon">🏆</div>
-        <h3>Başarı Sistemi</h3>
-        <p>Görevleri tamamla, başarımlar kazan ve profilini geliştir.</p>
-      </div>
-
-      <div class="card">
-        <div class="icon">🎁</div>
-        <h3>Günlük Ödüller</h3>
-        <p>Her gün siteye giriş yaparak günlük ödülünü almaya çalış.</p>
-      </div>
-
-      <div class="card">
-        <div class="icon">👑</div>
-        <h3>Özel Rütbeler</h3>
-        <p>Mağazadaki rütbeleri incele ve hesabını özelleştir.</p>
-      </div>
-
-      <div class="card">
-        <div class="icon">🌍</div>
-        <h3>Aktif Topluluk</h3>
-        <p>Diğer oyuncularla tanış, sohbet et ve topluluğun bir parçası ol.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- SUNUCU BİLGİLERİ -->
-<section class="section alt" id="sunucu">
-  <div class="container">
-    <div class="heading">
-      <small>MACERAYA HAZIR MISIN?</small>
-      <h2>DarkSMP'ye <span class="gradient">Katıl!</span></h2>
-      <p>Sunucu adresini kopyala ve Minecraft üzerinden giriş yap.</p>
-    </div>
-
-    <div class="panel server">
-      <div class="icon" style="margin:auto">⛏️</div>
-      <h3>JAVA SUNUCUSU</h3>
-      <div class="serverip" id="serverAddress">SUNUCU_ADRESINI_BURAYA_YAZ</div>
-
-      <button class="btn" onclick="copyServerIP()">
-        📋 SUNUCU ADRESİNİ KOPYALA
-      </button>
-
-      <p class="note" style="margin-top:18px">
-        Minecraft Java Edition · Sürüm bilgisini sunucu yöneticisinden kontrol et.
-      </p>
-    </div>
-  </div>
-</section>
-
-<!-- RÜTBE MAĞAZASI -->
-<section class="section" id="magaza">
-  <div class="container">
-    <div class="heading">
-      <small>DARKSMP MAĞAZA</small>
-      <h2>Rütbeni <span class="gradient">Yükselt!</span></h2>
-      <p>
-        DarkSMP mağazasındaki özel rütbeleri incele.
-        Satın almadan önce özelliklerini kontrol et.
-      </p>
-    </div>
-
-    <div class="grid three">
-
-      <div class="card rank">
-        <div class="rankbody">
-          <div class="ranktop">
-            <span class="eyebrow">BAŞLANGIÇ</span>
-            <span>🥉</span>
+        <div class="panel-box panel-tab hidden" id="tab-profile">
+          <h3>Oyuncu Profilim</h3>
+          <div class="form-group">
+            <label>Minecraft kullanıcı adın</label>
+            <input class="form-control" id="minecraftName" maxlength="16" placeholder="MinecraftAdı">
           </div>
-          <h3>VIP</h3>
-          <p class="rankdesc">DarkSMP macerana özel bir başlangıç yap.</p>
-          <div class="price">100 <small>PUAN</small></div>
-          <ul class="perks">
-            <li>VIP sohbet etiketi</li>
-            <li>Özel profil rengi</li>
-            <li>VIP oyuncu görünümü</li>
-          </ul>
-        </div>
-        <div class="rankfoot">
-          <button class="btn block" onclick="addRankToCart('VIP')">
-            SEPETE EKLE
-          </button>
-        </div>
-      </div>
-
-      <div class="card rank featured">
-        <div class="ribbon">POPÜLER</div>
-        <div class="rankbody">
-          <div class="ranktop">
-            <span class="eyebrow">ORTA SEVİYE</span>
-            <span>🥇</span>
+          <div class="form-group">
+            <label>Profil açıklaması</label>
+            <textarea class="form-control" id="profileDescription" maxlength="300" placeholder="Kendinden bahset..."></textarea>
           </div>
-          <h3>MVIP</h3>
-          <p class="rankdesc">Daha özel bir oyuncu deneyimi yaşa.</p>
-          <div class="price">250 <small>PUAN</small></div>
-          <ul class="perks">
-            <li>MVIP sohbet etiketi</li>
-            <li>Özel profil görünümü</li>
-            <li>MVIP oyuncu görünümü</li>
-          </ul>
-        </div>
-        <div class="rankfoot">
-          <button class="btn block" onclick="addRankToCart('MVIP')">
-            SEPETE EKLE
-          </button>
-        </div>
-      </div>
-
-      <div class="card rank">
-        <div class="rankbody">
-          <div class="ranktop">
-            <span class="eyebrow">ÜST SEVİYE</span>
-            <span>💎</span>
-          </div>
-          <h3>ELITE</h3>
-          <p class="rankdesc">Sunucuda kendine özel bir yer edin.</p>
-          <div class="price">500 <small>PUAN</small></div>
-          <ul class="perks">
-            <li>ELITE sohbet etiketi</li>
-            <li>Özel profil görünümü</li>
-            <li>ELITE oyuncu görünümü</li>
-          </ul>
-        </div>
-        <div class="rankfoot">
-          <button class="btn block" onclick="addRankToCart('ELITE')">
-            SEPETE EKLE
-          </button>
-        </div>
-      </div>
-
-      <div class="card rank">
-        <div class="rankbody">
-          <div class="ranktop">
-            <span class="eyebrow">UZMAN</span>
-            <span>🔥</span>
-          </div>
-          <h3>LEGEND</h3>
-          <p class="rankdesc">Legend rütbesiyle farkını ortaya koy.</p>
-          <div class="price">750 <small>PUAN</small></div>
-          <ul class="perks">
-            <li>LEGEND sohbet etiketi</li>
-            <li>Özel profil görünümü</li>
-            <li>LEGEND oyuncu görünümü</li>
-          </ul>
-        </div>
-        <div class="rankfoot">
-          <button class="btn block" onclick="addRankToCart('LEGEND')">
-            SEPETE EKLE
-          </button>
-        </div>
-      </div>
-
-      <div class="card rank">
-        <div class="rankbody">
-          <div class="ranktop">
-            <span class="eyebrow">ELİT</span>
-            <span>👑</span>
-          </div>
-          <h3>TITAN</h3>
-          <p class="rankdesc">En üst düzey rütbelerden biriyle tanış.</p>
-          <div class="price">1000 <small>PUAN</small></div>
-          <ul class="perks">
-            <li>TITAN sohbet etiketi</li>
-            <li>Özel profil görünümü</li>
-            <li>TITAN oyuncu görünümü</li>
-          </ul>
-        </div>
-        <div class="rankfoot">
-          <button class="btn block" onclick="addRankToCart('TITAN')">
-            SEPETE EKLE
-          </button>
-        </div>
-      </div>
-
-      <div class="card rank">
-        <div class="rankbody">
-          <div class="ranktop">
-            <span class="eyebrow">ÖZEL</span>
-            <span>🌑</span>
-          </div>
-          <h3>IMMORTAL</h3>
-          <p class="rankdesc">DarkSMP'nin özel rütbe deneyimini keşfet.</p>
-          <div class="price">1500 <small>PUAN</small></div>
-          <ul class="perks">
-            <li>IMMORTAL sohbet etiketi</li>
-            <li>Özel profil görünümü</li>
-            <li>IMMORTAL oyuncu görünümü</li>
-          </ul>
-        </div>
-        <div class="rankfoot">
-          <button class="btn block" onclick="addRankToCart('IMMORTAL')">
-            SEPETE EKLE
-          </button>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- SEPET -->
-    <div class="panel" style="margin-top:25px">
-      <div class="paneltitle">
-        <h3>🛒 Alışveriş Sepetim</h3>
-        <button class="btn secondary small" onclick="clearRankCart()">
-          Sepeti Temizle
-        </button>
-      </div>
-
-      <div id="rankCart">
-        <p class="note">Sepetinde henüz rütbe bulunmuyor.</p>
-      </div>
-
-      <div class="carttotal">
-        <span>Toplam</span>
-        <span id="rankCartTotal">0 Puan</span>
-      </div>
-
-      <button class="btn block" style="margin-top:17px"
-        onclick="checkoutRankCart()">
-        SATIN AL
-      </button>
-
-      <p class="note" style="margin-top:12px">
-        Satın alma işlemleri hesabına ve sunucu mağazası kurallarına bağlıdır.
-      </p>
-    </div>
-  </div>
- <!-- OYUNCU PANELİ -->
-<section class="section alt" id="hesabim">
-  <div class="container">
-    <div class="heading">
-      <small>OYUNCU MERKEZİ</small>
-      <h2>Oyuncu <span class="gradient">Paneli</span></h2>
-      <p>Hesabını yönet, puanlarını takip et ve ilerlemeni görüntüle.</p>
-    </div>
-
-    <div class="panel" id="playerPanel">
-      <div id="loggedOutPanel">
-        <div class="icon" style="margin:0 auto 15px">👤</div>
-        <h3 style="text-align:center">Henüz giriş yapmadın</h3>
-        <p class="note" style="text-align:center">
-          Oyuncu panelini kullanmak için hesabına giriş yap.
-        </p>
-        <div style="text-align:center;margin-top:18px">
-          <button class="btn" onclick="openAuthModal()">GİRİŞ YAP</button>
-        </div>
-      </div>
-
-      <div id="loggedInPanel" class="hidden">
-        <div class="profile">
-          <img id="playerSkin" class="skin-avatar"
-            src="https://mc-heads.net/avatar/Steve"
-            alt="Minecraft oyuncu kafası">
-          <div>
-            <h3 id="profileUsername">Oyuncu</h3>
-            <p class="note" id="profileRank">Üye</p>
-          </div>
-          <button class="btn secondary small"
-            style="margin-left:auto" onclick="logoutUser()">
-            ÇIKIŞ YAP
-          </button>
+          <button class="btn btn-primary" id="saveProfile">Profili Kaydet</button>
         </div>
 
-        <div class="metrics">
-          <div class="metric">
-            <span>PUAN</span>
-            <strong id="profilePoints">0</strong>
-          </div>
-          <div class="metric">
-            <span>TOPLAM DAKİKA</span>
-            <strong id="profileMinutes">0</strong>
-          </div>
-          <div class="metric">
-            <span>GÜNLÜK SERİ</span>
-            <strong id="profileStreak">0</strong>
-          </div>
-          <div class="metric">
-            <span>SEVİYE</span>
-            <strong id="profileLevel">1</strong>
-          </div>
+        <div class="panel-box panel-tab hidden" id="tab-wallet">
+          <h3>Puan Cüzdanım</h3>
+          <div class="balance" id="walletBalance">0 puan</div>
+          <p class="muted">Puan hareketleri ve satın alma geçmişi veritabanı bağlantısı gerektirir.</p>
         </div>
 
-        <div style="margin-top:25px">
-          <div class="paneltitle">
-            <h3>⭐ Oyuncu İlerlemesi</h3>
-            <span class="note" id="xpText">0 / 100 XP</span>
-          </div>
-          <div class="xp-track">
-            <div class="xp-fill" id="xpProgress"></div>
-          </div>
-          <p class="note">Görevleri tamamlayarak ilerlemeni artırabilirsin.</p>
+        <div class="panel-box panel-tab hidden" id="tab-daily">
+          <h3>Günlük Ödül</h3>
+          <p class="muted">Günlük ödül sistemi henüz veritabanına bağlanmadı.</p>
+          <button class="btn btn-primary" id="dailyButton">Günlük Ödülü Kontrol Et</button>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- GÜNLÜK ÖDÜL -->
-<section class="section" id="gunluk">
-  <div class="container">
-    <div class="heading">
-      <small>HER GÜN YENİ BİR FIRSAT</small>
-      <h2>Günlük <span class="gradient">Ödül</span></h2>
-      <p>Her gün giriş yaparak günlük ödülünü talep et.</p>
-    </div>
-
-    <div class="reward">
-      <div class="gift">🎁</div>
-      <h2>Günlük Ödülünü Al!</h2>
-      <p class="muted">Düzenli giriş yap, serini koru ve puan kazan.</p>
-
-      <div class="streak">
-        🔥 Günlük seri: <span id="dailyStreak">0</span> gün
-      </div>
-
-      <div class="metrics" style="margin:25px 0">
-        <div class="metric">
-          <span>BUGÜNKÜ ÖDÜL</span>
-          <strong>25 🪙</strong>
+        <div class="panel-box panel-tab hidden" id="tab-quests">
+          <h3>Görevlerim</h3>
+          <div id="questList" class="empty-state">Görev verileri henüz eklenmedi.</div>
         </div>
-        <div class="metric">
-          <span>7 GÜNLÜK HEDEF</span>
-          <strong>🔥</strong>
+
+        <div class="panel-box panel-tab hidden" id="tab-achievements">
+          <h3>Başarımlar</h3>
+          <div id="achievementList" class="empty-state">Başarım verileri henüz eklenmedi.</div>
         </div>
-      </div>
 
-      <button class="btn" id="claimDailyButton"
-        onclick="claimDailyReward()">
-        GÜNLÜK ÖDÜLÜ AL
-      </button>
-
-      <p class="note" style="margin-top:15px" id="dailyMessage">
-        Ödülünü almak için giriş yapmalısın.
-      </p>
-    </div>
-  </div>
-</section>
-
-<!-- TOPLULUK -->
-<section class="section alt" id="topluluk">
-  <div class="container">
-    <div class="heading">
-      <small>DARKSMP TOPLULUĞU</small>
-      <h2>Oyuncuların <span class="gradient">Dünyası</span></h2>
-      <p>Oyuncuları keşfet, sıralamaları incele ve başarılarını takip et.</p>
-    </div>
-
-    <div class="data-grid">
-
-      <div class="data-card">
-        <h3>🏆 Puan Sıralaması</h3>
-        <div id="pointsLeaderboard" class="data-list">
-          <div class="empty-state">Sıralama yükleniyor...</div>
-        </div>
-      </div>
-
-      <div class="data-card">
-        <h3>⏱️ Oyun Süresi Sıralaması</h3>
-        <div id="minutesLeaderboard" class="data-list">
-          <div class="empty-state">Sıralama yükleniyor...</div>
-        </div>
-      </div>
-
-      <div class="data-card">
-        <h3>🏅 Başarımlar</h3>
-        <div id="achievementList" class="data-list">
-          <div class="empty-state">Başarımlar yükleniyor...</div>
-        </div>
-      </div>
-
-      <div class="data-card">
-        <h3>🎯 Aktif Görevler</h3>
-        <div id="questList" class="data-list">
-          <div class="empty-state">Görevler yükleniyor...</div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- SEZONLAR -->
-<section class="section" id="sezonlar">
-  <div class="container">
-    <div class="heading">
-      <small>REKABET ZAMANI</small>
-      <h2>DarkSMP <span class="gradient">Sezonları</span></h2>
-      <p>Sezon etkinliklerini ve oyuncu mücadelelerini takip et.</p>
-    </div>
-
-    <div class="panel">
-      <div class="paneltitle">
-        <h3>🏆 Aktif Sezon</h3>
-        <span class="status approved">Aktif</span>
-      </div>
-      <div id="activeSeason">
-        <div class="empty-state">Sezon bilgileri yükleniyor...</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- HABERLER -->
-<section class="section alt" id="haberler">
-  <div class="container">
-    <div class="heading">
-      <small>SON GELİŞMELER</small>
-      <h2>Haberler ve <span class="gradient">Duyurular</span></h2>
-      <p>DarkSMP dünyasındaki gelişmeleri buradan takip edebilirsin.</p>
-    </div>
-
-    <div class="grid three" id="newsList">
-      <div class="card">
-        <div class="icon">📰</div>
-        <h3>Haberler yükleniyor</h3>
-        <p>Sunucu duyuruları burada görüntülenecek.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- OYUNCU PROFİLİ -->
-<section class="section" id="profil">
-  <div class="container">
-    <div class="heading">
-      <small>KİŞİSEL ALAN</small>
-      <h2>Profil <span class="gradient">Ayarları</span></h2>
-      <p>Oyuncu profilini görüntüle ve açıklamanı güncelle.</p>
-    </div>
-
-    <div class="panel">
-      <div class="field">
-        <label>Minecraft Kullanıcı Adı</label>
-        <input id="profileMinecraftName" type="text"
-          placeholder="Minecraft kullanıcı adın" maxlength="16">
-      </div>
-
-      <div class="field">
-        <label>Profil Açıklaması</label>
-        <textarea id="profileDescription"
-          maxlength="180"
-          placeholder="Kendinden biraz bahset..."></textarea>
-      </div>
-
-      <button class="btn" onclick="savePlayerProfile()">
-        PROFİLİ KAYDET
-      </button>
-
-      <p class="note" style="margin-top:12px">
-        Profil değişiklikleri hesabınla ilişkilendirilir.
-      </p>
-    </div>
-  </div>
-</section>
- <!-- BAŞVURU SİSTEMİ -->
-<section class="section alt" id="basvuru">
-  <div class="container">
-    <div class="heading">
-      <small>DARKSMP EKİBİNE KATIL</small>
-      <h2>Ekibimizin <span class="gradient">Parçası Ol!</span></h2>
-      <p>Medya, moderatör, rehber veya sponsor başvurusu yapabilirsin.</p>
-    </div>
-
-    <div class="grid two">
-
-      <div class="card">
-        <div class="icon">🎬</div>
-        <h3>Medya Başvurusu</h3>
-        <p>DarkSMP içeriklerini üretmek ve topluluğumuzu tanıtmak ister misin?</p>
-        <button class="btn block"
-          onclick="openApplicationForm('Medya')">
-          BAŞVURU YAP
-        </button>
-      </div>
-
-      <div class="card">
-        <div class="icon">🛡️</div>
-        <h3>Moderatör Başvurusu</h3>
-        <p>Sunucuda düzeni sağlamaya ve oyunculara yardımcı olmaya hazır mısın?</p>
-        <button class="btn block"
-          onclick="openApplicationForm('Moderatör')">
-          BAŞVURU YAP
-        </button>
-      </div>
-
-      <div class="card">
-        <div class="icon">🧭</div>
-        <h3>Rehber Başvurusu</h3>
-        <p>Yeni oyunculara yardımcı olmak ve onları karşılamak ister misin?</p>
-        <button class="btn block"
-          onclick="openApplicationForm('Rehber')">
-          BAŞVURU YAP
-        </button>
-      </div>
-
-      <div class="card">
-        <div class="icon">🤝</div>
-        <h3>Sponsor Başvurusu</h3>
-        <p>DarkSMP ile iş birliği yapmak ister misin?</p>
-        <button class="btn block"
-          onclick="openApplicationForm('Sponsor')">
-          BAŞVURU YAP
-        </button>
-      </div>
-
-    </div>
-
-    <div class="panel" style="margin-top:22px">
-      <h3>📋 Başvurularım</h3>
-      <div id="myApplications">
-        <div class="empty-state">Başvurularını görmek için giriş yapmalısın.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- DESTEK MERKEZİ -->
-<section class="section" id="destek">
-  <div class="container">
-    <div class="heading">
-      <small>YARDIMA MI İHTİYACIN VAR?</small>
-      <h2>Destek <span class="gradient">Merkezi</span></h2>
-      <p>Yaşadığın sorunları bize ilet, destek talebini takip et.</p>
-    </div>
-
-    <div class="grid two">
-      <div class="panel">
-        <h3>🎫 Yeni Destek Talebi</h3>
-
-        <form id="supportForm" onsubmit="submitSupportTicket(event)">
-          <div class="field">
-            <label>Konu</label>
-            <select id="supportCategory" required>
-              <option value="">Bir konu seç</option>
-              <option value="Hesap">Hesap Sorunu</option>
-              <option value="Mağaza">Mağaza Sorunu</option>
-              <option value="Puan">Puan Sorunu</option>
-              <option value="Oyuncu">Oyuncu Şikayeti</option>
-              <option value="Diğer">Diğer</option>
+        <div class="panel-box panel-tab hidden" id="tab-applications">
+          <h3>Başvuru Merkezi</h3>
+          <p class="muted" style="margin-bottom:18px">Yetkili ekibine katılmak için başvuru oluştur.</p>
+          <div class="form-group">
+            <label>Başvuru türü</label>
+            <select class="form-control" id="applicationType">
+              <option value="Rehber">Rehber</option>
+              <option value="Moderatör">Moderatör</option>
+              <option value="Medya">Medya</option>
+              <option value="Sponsor">Sponsor</option>
             </select>
           </div>
-
-          <div class="field">
-            <label>Başlık</label>
-            <input id="supportTitle" maxlength="80"
-              placeholder="Sorunun başlığı" required>
+          <div class="form-group">
+            <label>Başvuru açıklaması</label>
+            <textarea class="form-control" id="applicationReason" placeholder="Neden başvurmak istiyorsun?"></textarea>
           </div>
-
-          <div class="field">
-            <label>Açıklama</label>
-            <textarea id="supportMessage" maxlength="1500"
-              placeholder="Sorununu ayrıntılı açıkla..." required></textarea>
-          </div>
-
-          <button class="btn block" type="submit">
-            DESTEK TALEBİ GÖNDER
-          </button>
-        </form>
-      </div>
-
-      <div class="panel">
-        <h3>📨 Destek Taleplerim</h3>
-        <div id="mySupportTickets">
-          <div class="empty-state">
-            Destek taleplerini görüntülemek için giriş yapmalısın.
-          </div>
+          <button class="btn btn-primary" id="sendApplication">Başvuruyu Gönder</button>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ÖZEL MESAJLAŞMA -->
-<section class="section alt" id="mesajlar">
+<section class="section" id="leaderboard">
   <div class="container">
-    <div class="heading">
-      <small>OYUNCU İLETİŞİMİ</small>
-      <h2>Özel <span class="gradient">Mesajlar</span></h2>
-      <p>DarkSMP oyuncularıyla özel mesajlaşma alanı.</p>
-    </div>
+    <h2 class="section-title">Oyuncu <span class="red">Sıralaması</span></h2>
+    <p class="section-desc">Topluluk sıralaması veritabanı bağlantısı tamamlandığında burada gösterilecek.</p>
 
-    <div class="grid two">
-      <div class="panel">
-        <h3>✉️ Yeni Mesaj</h3>
-
-        <form id="privateMessageForm"
-          onsubmit="sendPrivateMessage(event)">
-
-          <div class="field">
-            <label>Alıcının Minecraft Adı</label>
-            <input id="messageRecipient"
-              maxlength="16"
-              placeholder="Oyuncu adı"
-              required>
-          </div>
-
-          <div class="field">
-            <label>Mesajın</label>
-            <textarea id="privateMessageText"
-              maxlength="1000"
-              placeholder="Mesajını yaz..."
-              required></textarea>
-          </div>
-
-          <button class="btn block" type="submit">
-            MESAJ GÖNDER
-          </button>
-        </form>
-
-        <p class="note" style="margin-top:12px">
-          Mesajlaşma özelliği için giriş yapmalısın.
-        </p>
-      </div>
-
-      <div class="panel">
-        <div class="paneltitle">
-          <h3>📬 Gelen ve Giden Mesajlar</h3>
-          <button class="btn secondary small"
-            onclick="loadPrivateMessages()">
-            YENİLE
-          </button>
-        </div>
-
-        <div id="privateMessageList">
-          <div class="empty-state">
-            Mesajlarını görmek için giriş yapmalısın.
-          </div>
-        </div>
+    <div class="panel-box">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Oyuncu</th>
+              <th>Puan</th>
+              <th>Rütbe</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboardBody">
+            <tr><td colspan="4">Henüz sıralama verisi yüklenmedi.</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
 </section>
 
-<!-- SSS -->
-<section class="section" id="sss">
+<section class="section" id="support">
   <div class="container">
-    <div class="heading">
-      <small>MERAK ETTİKLERİN</small>
-      <h2>Sıkça Sorulan <span class="gradient">Sorular</span></h2>
-    </div>
+    <h2 class="section-title">Destek <span class="red">Merkezi</span></h2>
+    <p class="section-desc">Sorularını ve sorunlarını bize iletebilirsin.</p>
 
-    <div class="faq">
-
-      <div class="faqitem">
-        <button class="faqq" onclick="toggleFAQ(this)">
-          DarkSMP'ye nasıl katılırım?
-          <span>＋</span>
-        </button>
-        <div class="faqa">
-          Minecraft Java Edition üzerinden sunucu adresini girerek katılabilirsin.
-        </div>
+    <div class="panel-box">
+      <div class="form-group">
+        <label>Konu</label>
+        <input class="form-control" id="supportTitle" placeholder="Destek konusu">
       </div>
-
-      <div class="faqitem">
-        <button class="faqq" onclick="toggleFAQ(this)">
-          Puanları nasıl kazanabilirim?
-          <span>＋</span>
-        </button>
-        <div class="faqa">
-          Sitedeki günlük ödül ve etkinlik sistemlerini takip edebilirsin.
-        </div>
+      <div class="form-group">
+        <label>Mesaj</label>
+        <textarea class="form-control" id="supportMessage" placeholder="Sorununu anlat..."></textarea>
       </div>
-
-      <div class="faqitem">
-        <button class="faqq" onclick="toggleFAQ(this)">
-          Rütbe satın aldığımda ne olur?
-          <span>＋</span>
-        </button>
-        <div class="faqa">
-          Satın alma işleminin ardından sipariş durumunu hesabından takip edebilirsin.
-        </div>
-      </div>
-
-      <div class="faqitem">
-        <button class="faqq" onclick="toggleFAQ(this)">
-          Ekibe nasıl katılabilirim?
-          <span>＋</span>
-        </button>
-        <div class="faqa">
-          Başvurular bölümünden uygun pozisyonu seçerek başvurunu gönderebilirsin.
-        </div>
-      </div>
-
-      <div class="faqitem">
-        <button class="faqq" onclick="toggleFAQ(this)">
-          Hesabımla ilgili sorun yaşarsam ne yapmalıyım?
-          <span>＋</span>
-        </button>
-        <div class="faqa">
-          Destek merkezinden yeni bir destek talebi oluşturabilirsin.
-        </div>
-      </div>
-
+      <button class="btn btn-primary" id="sendSupport">Destek Talebi Oluştur</button>
     </div>
   </div>
 </section>
 
-<!-- YÖNETİM PANELİ -->
-<section class="section alt" id="adminPanel">
+<section class="section" id="faq">
   <div class="container">
-    <div class="heading">
-      <small>YÖNETİM MERKEZİ</small>
-      <h2>DarkSMP <span class="gradient">Yönetim</span></h2>
-      <p>Yetkili kullanıcılar için yönetim alanı.</p>
+    <h2 class="section-title">Sıkça Sorulan <span class="red">Sorular</span></h2>
+
+    <div class="faq-item">
+      <button class="faq-question">Sunucuya nasıl katılırım? <span>＋</span></button>
+      <div class="faq-answer">Minecraft çok oyunculu bölümünden sunucu adresini ekleyebilirsin.</div>
     </div>
 
-    <div class="panel">
-      <div id="adminLocked">
-        <div class="icon" style="margin:0 auto 15px">🔒</div>
-        <h3 style="text-align:center">Yetkili Girişi Gerekli</h3>
-        <p class="note" style="text-align:center">
-          Bu alan yalnızca yetkili hesaplar tarafından kullanılabilir.
-        </p>
-      </div>
+    <div class="faq-item">
+      <button class="faq-question">Puanlar ne işe yarar? <span>＋</span></button>
+      <div class="faq-answer">Puanlar mağazadaki rütbe ve ödül sistemleri için kullanılacaktır.</div>
+    </div>
 
-      <div id="adminContent" class="hidden">
-        <div class="metrics">
-          <div class="metric">
-            <span>OYUNCULAR</span>
-            <strong id="adminPlayerCount">0</strong>
-          </div>
-          <div class="metric">
-            <span>BAŞVURULAR</span>
-            <strong id="adminApplicationCount">0</strong>
-          </div>
-          <div class="metric">
-            <span>DESTEK TALEPLERİ</span>
-            <strong id="adminTicketCount">0</strong>
-          </div>
-          <div class="metric">
-            <span>SİPARİŞLER</span>
-            <strong id="adminOrderCount">0</strong>
-          </div>
-        </div>
+    <div class="faq-item">
+      <button class="faq-question">Hesabımı nasıl oluştururum? <span>＋</span></button>
+      <div class="faq-answer">Üst menüdeki Giriş Yap butonundan kayıt sekmesine geçebilirsin.</div>
+    </div>
 
-        <div style="margin-top:25px">
-          <h3>📋 Başvuruları Yönet</h3>
-          <div id="adminApplications">
-            <div class="empty-state">Başvurular yükleniyor...</div>
-          </div>
-        </div>
-
-        <div style="margin-top:25px">
-          <h3>🎫 Destek Taleplerini Yönet</h3>
-          <div id="adminTickets">
-            <div class="empty-state">Destek talepleri yükleniyor...</div>
-          </div>
-        </div>
-
-        <div style="margin-top:25px">
-          <h3>🛒 Siparişleri Yönet</h3>
-          <div id="adminOrders">
-            <div class="empty-state">Siparişler yükleniyor...</div>
-          </div>
-        </div>
-      </div>
+    <div class="faq-item">
+      <button class="faq-question">Destek talebi nasıl gönderirim? <span>＋</span></button>
+      <div class="faq-answer">Destek Merkezi bölümündeki formu kullanabilirsin. Veritabanı bağlantısı henüz yapılmamıştır.</div>
     </div>
   </div>
 </section>
 
-<!-- ALT BİLGİ -->
-<footer>
-  <div class="container">
-    <div class="footgrid">
-      <div>
-        <a href="#anasayfa" class="brand">
-          <span class="brandmark">⚔</span>
-          <span>DARK<b>SMP</b></span>
-        </a>
-        <p style="margin-top:15px">
-          Kendi hikâyeni yaz, topluluğa katıl ve DarkSMP dünyasını keşfet.
-        </p>
-      </div>
+</main>
 
-      <div>
-        <h4>HIZLI BAĞLANTILAR</h4>
-        <div class="footlinks">
-          <a href="#magaza">Mağaza</a>
-          <a href="#topluluk">Topluluk</a>
-          <a href="#basvuru">Başvurular</a>
-          <a href="#destek">Destek</a>
-        </div>
-      </div>
-
-      <div>
-        <h4>OYUNCU ALANI</h4>
-        <div class="footlinks">
-          <a href="#hesabim">Hesabım</a>
-          <a href="#gunluk">Günlük Ödül</a>
-          <a href="#mesajlar">Özel Mesajlar</a>
-          <a href="#sss">Yardım</a>
-        </div>
-      </div>
+<footer class="footer">
+  <div class="container footer-grid">
+    <div>
+      <a href="#home" class="logo">DARK<span>SMP</span></a>
+      <p style="margin-top:15px">Kendi dünyanı oluştur. Kendi hikâyeni yaz.</p>
     </div>
-
-    <div class="footbottom">
-      <span>© 2026 DarkSMP. Tüm hakları saklıdır.</span>
-      <span>DarkSMP Resmi Web Sitesi</span>
+    <div>
+      <h4>Sayfalar</h4>
+      <p><a href="#home">Ana Sayfa</a></p>
+      <p><a href="#store">Mağaza</a></p>
+      <p><a href="#leaderboard">Sıralama</a></p>
+    </div>
+    <div>
+      <h4>Topluluk</h4>
+      <p><a href="#support">Destek</a></p>
+      <p><a href="#faq">Yardım</a></p>
+      <p>© <span id="year"></span> DarkSMP</p>
     </div>
   </div>
 </footer>
 
-<!-- GİRİŞ MODALI -->
-<div class="backdrop hidden" id="authModal">
-  <div class="modal">
-    <div class="modalhead">
-      <h3>Hesap İşlemleri</h3>
-      <button class="close" onclick="closeModal('authModal')">×</button>
+<div class="modal hidden" id="authModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2>DarkSMP Hesabı</h2>
+      <button class="modal-close" id="closeAuth">×</button>
     </div>
 
     <div class="tabs">
-      <button class="btn" id="loginTab"
-        onclick="switchAuthTab('login')">Giriş Yap</button>
-      <button class="btn secondary" id="registerTab"
-        onclick="switchAuthTab('register')">Kayıt Ol</button>
+      <button class="btn btn-primary" id="loginTab">Giriş Yap</button>
+      <button class="btn" id="registerTab">Kayıt Ol</button>
     </div>
 
-    <form id="authForm" onsubmit="handleAuth(event)">
-      <div class="field" id="usernameField">
-        <label>Minecraft Kullanıcı Adı</label>
-        <input id="authUsername" maxlength="16"
-          placeholder="Minecraft kullanıcı adın">
-      </div>
-
-      <div class="field">
+    <form id="authForm">
+      <div class="form-group">
         <label>E-posta</label>
-        <input id="authEmail" type="email"
-          placeholder="ornek@mail.com" required>
+        <input class="form-control" type="email" id="authEmail" required placeholder="ornek@mail.com">
       </div>
-
-      <div class="field">
+      <div class="form-group">
         <label>Şifre</label>
-        <input id="authPassword" type="password"
-          minlength="6" placeholder="En az 6 karakter" required>
+        <input class="form-control" type="password" id="authPassword" required minlength="6" placeholder="En az 6 karakter">
       </div>
-
-      <button class="btn block" id="authSubmit" type="submit">
-        GİRİŞ YAP
-      </button>
+      <button class="btn btn-primary" style="width:100%" id="authSubmit" type="submit">Giriş Yap</button>
     </form>
 
-    <p class="note" style="margin-top:15px">
-      Hesap bilgilerini kimseyle paylaşma.
-    </p>
+    <p id="authMessage" class="muted" style="margin-top:15px;font-size:12px"></p>
   </div>
 </div>
 
-<!-- BAŞVURU MODALI -->
-<div class="backdrop hidden" id="applicationModal">
-  <div class="modal">
-    <div class="modalhead">
-      <h3 id="applicationModalTitle">Başvuru Formu</h3>
-      <button class="close"
-        onclick="closeModal('applicationModal')">×</button>
-    </div>
+<div class="toast-container" id="toastContainer"></div>
 
-    <form id="applicationForm" onsubmit="submitApplication(event)">
-      <input type="hidden" id="applicationType">
-
-      <div class="field">
-        <label>Minecraft Kullanıcı Adı</label>
-        <input id="applicationMinecraft" maxlength="16"
-          placeholder="Oyun içi adın" required>
-      </div>
-
-      <div class="field">
-        <label>Yaş</label>
-        <input id="applicationAge" type="number"
-          min="13" max="99" placeholder="Yaşın" required>
-      </div>
-
-      <div class="field">
-        <label>Discord Kullanıcı Adı</label>
-        <input id="applicationDiscord"
-          placeholder="Discord kullanıcı adın" required>
-      </div>
-
-      <div class="field">
-        <label>Neden bu pozisyonu istiyorsun?</label>
-        <textarea id="applicationReason"
-          maxlength="1200" required
-          placeholder="Kendini ve neden başvurduğunu anlat..."></textarea>
-      </div>
-
-      <div class="field">
-        <label>Deneyimin</label>
-        <textarea id="applicationExperience"
-          maxlength="1200" required
-          placeholder="Daha önceki deneyimlerini yaz..."></textarea>
-      </div>
-
-      <button class="btn block" type="submit">
-        BAŞVURUYU GÖNDER
-      </button>
-    </form>
-  </div>
-</div>
-
-<!-- BİLDİRİM ALANI -->
-<div class="toastwrap" id="toastContainer"></div>
- <script>
+<script>
 /* ==========================================
-   DARKSMP - ANA SİSTEM
+   DARKSMP ANA JAVASCRIPT
 ========================================== */
 
-/* SUPABASE BİLGİLERİ */
+/* SUPABASE AYARLARI */
 const SUPABASE_URL = "https://frfltsscbbvgjdffrxot.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_TLuw_sK8M8gi4gFwBAx2gg__-t0ahzE";
 
-const db = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
-);
-
+let db = null;
 let currentUser = null;
 let currentPlayer = null;
 let authMode = "login";
@@ -1715,35 +1080,32 @@ let rankCart = [];
 
 /* RÜTBE FİYATLARI */
 const rankPrices = {
-  VIP: 150,
-  MVIP: 200,
-  "MVIP+": 250,
-  LEGEND: 275,
-  SUPREME: 300,
-  IMMORTAL: 325,
-  NOVA: 350,
-  EMPEROR: 400,
-  "DARK+": 425
+  VIP:150,
+  MVIP:200,
+  "MVIP+":250,
+  LEGEND:275,
+  SUPREME:300,
+  IMMORTAL:325,
+  NOVA:350,
+  EMPEROR:400,
+  "DARK+":425
 };
 
+const rankDescriptions = {
+  VIP:"Başlangıç ayrıcalıkları",
+  MVIP:"Daha fazla oyuncu avantajı",
+  "MVIP+":"Gelişmiş ayrıcalıklar",
+  LEGEND:"Özel oyuncu statüsü",
+  SUPREME:"Güçlü oyuncu avantajları",
+  IMMORTAL:"Üst düzey ayrıcalıklar",
+  NOVA:"Özel topluluk rütbesi",
+  EMPEROR:"İmparator ayrıcalıkları",
+  "DARK+":"En üst seviye rütbe"
+};
 
-/* ==========================================
-   GENEL YARDIMCI FONKSİYONLAR
-========================================== */
+/* GENEL YARDIMCILAR */
 
-function $(id) {
-  return document.getElementById(id);
-}
-
-function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, char => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#039;"
-  })[char]);
-}
+const $ = id => document.getElementById(id);
 
 function toast(message) {
   const container = $("toastContainer");
@@ -1752,118 +1114,211 @@ function toast(message) {
   const item = document.createElement("div");
   item.className = "toast";
   item.textContent = message;
-
   container.appendChild(item);
 
-  setTimeout(() => item.remove(), 4000);
+  setTimeout(() => item.remove(),3500);
 }
 
-function showMessage(elementId, message, type = "info") {
-  const element = $(elementId);
-  if (!element) return;
-
-  element.className = "message " + type;
-  element.textContent = message;
+function showMessage(id,message) {
+  const element = $(id);
+  if (element) element.textContent = message;
 }
 
-function setText(id, value) {
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g,char => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#039;"
+  })[char]);
+}
+
+function setText(id,value) {
   const element = $(id);
   if (element) element.textContent = value ?? "";
 }
 
-function toggleMobileMenu() {
-  $("mobileMenu")?.classList.toggle("open");
-}
+/* SUPABASE BAŞLATMA */
 
-function closeModal(id) {
-  $(id)?.classList.add("hidden");
-}
-
-function openAuthModal() {
-  $("authModal")?.classList.remove("hidden");
-}
-
-function toggleFAQ(button) {
-  const item = button.closest(".faqitem");
-  if (!item) return;
-
-  item.classList.toggle("open");
-
-  const symbol = button.querySelector("span");
-  if (symbol) {
-    symbol.textContent = item.classList.contains("open") ? "−" : "＋";
-  }
-}
-
-function copyServerIP() {
-  const address = $("serverAddress")?.textContent.trim();
-
-  if (!address || address === "SUNUCU_ADRESINI_BURAYA_YAZ") {
-    toast("Önce sunucu adresini index.html içerisinde düzenlemelisin.");
+function initializeSupabase() {
+  if (!window.supabase) {
+    toast("Supabase kütüphanesi yüklenemedi.");
     return;
   }
 
-  navigator.clipboard.writeText(address)
-    .then(() => toast("Sunucu adresi kopyalandı!"))
-    .catch(() => toast("Kopyalama başarısız oldu."));
+  if (!SUPABASE_URL.startsWith("https://") ||
+      SUPABASE_ANON_KEY === "BURAYA_PUBLISHABLE_KEY_YAZ") {
+    toast("Supabase publishable anahtarını eklemelisin.");
+    return;
+  }
+
+  try {
+    db = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY
+    );
+
+    db.auth.getSession().then(({data,error}) => {
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      currentUser = data.session?.user ?? null;
+      updateAuthUI();
+    });
+
+    db.auth.onAuthStateChange((_event,session) => {
+      currentUser = session?.user ?? null;
+      updateAuthUI();
+    });
+
+  } catch(error) {
+    console.error(error);
+    toast("Supabase bağlantısı başlatılamadı.");
+  }
 }
 
+/* RÜTBE MAĞAZASI */
 
-/* ==========================================
-   GİRİŞ VE KAYIT
-========================================== */
+function renderRanks() {
+  const grid = $("rankGrid");
+  if (!grid) return;
+
+  grid.innerHTML = "";
+
+  Object.entries(rankPrices).forEach(([name,price]) => {
+    const card = document.createElement("article");
+    card.className = "rank-card";
+
+    const title = document.createElement("div");
+    title.className = "rank-name";
+    title.textContent = name;
+
+    const description = document.createElement("p");
+    description.className = "muted";
+    description.textContent = rankDescriptions[name];
+
+    const amount = document.createElement("div");
+    amount.className = "rank-price";
+    amount.textContent = price + " Puan";
+
+    const list = document.createElement("ul");
+    ["Özel rütbe etiketi","Sunucu içi ayrıcalıklar","Oyuncu profili görünümü"].forEach(text => {
+      const li = document.createElement("li");
+      li.textContent = text;
+      list.appendChild(li);
+    });
+
+    const button = document.createElement("button");
+    button.className = "btn btn-primary";
+    button.textContent = "Sepete Ekle";
+    button.addEventListener("click",() => addToCart(name));
+
+    card.append(title,description,amount,list,button);
+    grid.appendChild(card);
+  });
+}
+
+function addToCart(rank) {
+  if (!rankPrices[rank]) return;
+
+  if (rankCart.includes(rank)) {
+    toast("Bu rütbe zaten sepetinde.");
+    return;
+  }
+
+  rankCart.push(rank);
+  renderCart();
+  toast(rank + " sepete eklendi.");
+}
+
+function removeFromCart(rank) {
+  rankCart = rankCart.filter(item => item !== rank);
+  renderCart();
+}
+
+function renderCart() {
+  const container = $("cartItems");
+  const totalElement = $("cartTotal");
+
+  if (!container || !totalElement) return;
+
+  container.innerHTML = "";
+
+  if (rankCart.length === 0) {
+    container.textContent = "Sepetiniz boş.";
+    container.className = "empty-state";
+  } else {
+    container.className = "";
+    rankCart.forEach(rank => {
+      const row = document.createElement("div");
+      row.style.cssText = "display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid #292929";
+
+      const name = document.createElement("span");
+      name.textContent = rank + " - " + rankPrices[rank] + " puan";
+
+      const remove = document.createElement("button");
+      remove.className = "btn btn-small";
+      remove.textContent = "Kaldır";
+      remove.addEventListener("click",() => removeFromCart(rank));
+
+      row.append(name,remove);
+      container.appendChild(row);
+    });
+  }
+
+  const total = rankCart.reduce((sum,rank) => sum + rankPrices[rank],0);
+  totalElement.textContent = total + " puan";
+}
+
+/* GİRİŞ VE KAYIT */
+
+function openAuthModal() {
+  $("authModal").classList.remove("hidden");
+}
+
+function closeAuthModal() {
+  $("authModal").classList.add("hidden");
+}
 
 function switchAuthTab(mode) {
   authMode = mode;
 
-  $("loginTab").className =
-    mode === "login" ? "btn" : "btn secondary";
+  $("loginTab").classList.toggle("btn-primary",mode === "login");
+  $("registerTab").classList.toggle("btn-primary",mode === "register");
 
-  $("registerTab").className =
-    mode === "register" ? "btn" : "btn secondary";
+  $("authSubmit").textContent =
+    mode === "login" ? "Giriş Yap" : "Kayıt Ol";
 
-  $("usernameField").classList.toggle(
-    "hidden",
-    mode === "login"
-  );
-
-  setText(
-    "authSubmit",
-    mode === "login" ? "GİRİŞ YAP" : "KAYIT OL"
-  );
+  showMessage("authMessage","");
 }
 
 async function handleAuth(event) {
   event.preventDefault();
 
-  const email = $("authEmail").value.trim();
-  const password = $("authPassword").value;
-  const username = $("authUsername").value.trim();
-
-  if (authMode === "register" && !/^[a-zA-Z0-9_]{3,16}$/.test(username)) {
-    toast("Minecraft kullanıcı adı 3-16 karakter olmalı.");
+  if (!db) {
+    toast("Önce Supabase bağlantısını tamamlamalısın.");
     return;
   }
 
+  const email = $("authEmail").value.trim();
+  const password = $("authPassword").value;
+
   const button = $("authSubmit");
   button.disabled = true;
-  button.textContent = "İŞLENİYOR...";
 
   try {
     let result;
 
-    if (authMode === "register") {
-      result = await db.auth.signUp({
+    if (authMode === "login") {
+      result = await db.auth.signInWithPassword({
         email,
-        password,
-        options: {
-          data: {
-            minecraft_username: username
-          }
-        }
+        password
       });
     } else {
-      result = await db.auth.signInWithPassword({
+      result = await db.auth.signUp({
         email,
         password
       });
@@ -1872,218 +1327,78 @@ async function handleAuth(event) {
     if (result.error) throw result.error;
 
     if (authMode === "register" && !result.data.session) {
-      toast("Kayıt oluşturuldu. E-posta doğrulaması gerekiyorsa gelen kutunu kontrol et.");
+      showMessage("authMessage","E-posta adresine gelen doğrulama bağlantısını kontrol et.");
       return;
     }
 
-    currentUser = result.data.user;
+    toast(authMode === "login" ? "Giriş başarılı!" : "Hesap oluşturuldu!");
+    closeAuthModal();
 
-    closeModal("authModal");
-    toast("Hesabına başarıyla giriş yaptın!");
-
-    await loadPlayerData();
-
-  } catch (error) {
-    toast("İşlem başarısız: " + error.message);
+  } catch(error) {
+    showMessage("authMessage",error.message || "İşlem başarısız.");
   } finally {
     button.disabled = false;
-    button.textContent =
-      authMode === "login" ? "GİRİŞ YAP" : "KAYIT OL";
   }
 }
 
-async function logoutUser() {
-  const { error } = await db.auth.signOut();
+async function logout() {
+  if (!db) return;
+
+  const {error} = await db.auth.signOut();
 
   if (error) {
-    toast("Çıkış yapılamadı: " + error.message);
+    toast(error.message);
     return;
   }
 
   currentUser = null;
-  currentPlayer = null;
-
   updateAuthUI();
-  toast("Hesabından çıkış yaptın.");
+  toast("Oturum kapatıldı.");
 }
-
-async function restoreSession() {
-  const { data, error } = await db.auth.getSession();
-
-  if (error) {
-    console.error(error);
-    return;
-  }
-
-  currentUser = data.session?.user || null;
-
-  if (currentUser) {
-    await loadPlayerData();
-  } else {
-    updateAuthUI();
-  }
-}
-
-db.auth.onAuthStateChange((_event, session) => {
-  currentUser = session?.user || null;
-
-  if (!currentUser) {
-    currentPlayer = null;
-    updateAuthUI();
-  }
-});
-
-
-/* ==========================================
-   OYUNCU PANELİ
-========================================== */
 
 function updateAuthUI() {
-  const loggedIn = Boolean(currentUser);
+  const loginButton = $("loginOpen");
+  const panelButton = $("panelOpen");
 
-  $("loggedOutPanel")?.classList.toggle("hidden", loggedIn);
-  $("loggedInPanel")?.classList.toggle("hidden", !loggedIn);
-
-  setText(
-    "loginButton",
-    loggedIn ? "Hesabım" : "Giriş Yap"
-  );
-
-  if (!loggedIn) {
-    setText("navPoints", "0");
-    $("adminContent")?.classList.add("hidden");
-    $("adminLocked")?.classList.remove("hidden");
+  if (currentUser) {
+    loginButton.textContent = "Çıkış Yap";
+    panelButton.textContent = "Hesabım";
+    setText("welcomeText",currentUser.email + " hesabına hoş geldin.");
+  } else {
+    loginButton.textContent = "Giriş Yap";
+    panelButton.textContent = "Hesabım";
+    setText("welcomeText","Devam etmek için hesabına giriş yap.");
   }
 }
 
-async function loadPlayerData() {
-  if (!currentUser) return;
+/* PANEL SEKMELERİ */
 
-  updateAuthUI();
+function switchPanelTab(tab) {
+  document.querySelectorAll(".panel-tab").forEach(panel => {
+    panel.classList.add("hidden");
+  });
 
-  const { data, error } = await db
-    .from("players")
-    .select("*")
-    .eq("user_id", currentUser.id)
-    .maybeSingle();
+  const target = $("tab-" + tab);
+  if (target) target.classList.remove("hidden");
 
-  if (error) {
-    console.error("Oyuncu bilgisi:", error);
-    toast("Oyuncu bilgileri yüklenemedi.");
-    return;
-  }
-
-  currentPlayer = data;
-
-  if (currentPlayer) {
-    const username = currentPlayer.minecraft_username || "Oyuncu";
-
-    setText("profileUsername", username);
-    setText("profilePoints", currentPlayer.points ?? 0);
-    setText("profileMinutes", currentPlayer.total_minutes ?? 0);
-    setText("profileStreak", currentPlayer.daily_streak ?? 0);
-    setText("dailyStreak", currentPlayer.daily_streak ?? 0);
-    setText("navPoints", currentPlayer.points ?? 0);
-
-    $("playerSkin").src =
-      "https://mc-heads.net/avatar/" + encodeURIComponent(username);
-
-    $("profileMinecraftName").value = username;
-
-    const points = Number(currentPlayer.points || 0);
-    const level = Math.floor(points / 100) + 1;
-    const xp = points % 100;
-
-    setText("profileLevel", level);
-    setText("xpText", xp + " / 100 XP");
-
-    $("xpProgress").style.width = xp + "%";
-  }
-
-  await loadPlayerProfile();
-  await loadPrivateMessages();
-  await loadMyApplications();
-  await loadMySupportTickets();
-  await checkAdmin();
-  await loadDailyStatus();
+  document.querySelectorAll(".sidebar button").forEach(button => {
+    button.classList.toggle("active",button.dataset.tab === tab);
+  });
 }
 
-
-/* ==========================================
-   PROFİL KAYDETME
-========================================== */
-
-async function loadPlayerProfile() {
-  if (!currentUser) return;
-
-  const { data, error } = await db
-    .from("player_profiles")
-    .select("*")
-    .eq("user_id", currentUser.id)
-    .maybeSingle();
-
-  if (error) {
-    console.error(error);
-    return;
-  }
-
-  if (data) {
-    $("profileDescription").value =
-      data.description || "";
-  }
-}
+/* PROFİL */
 
 async function savePlayerProfile() {
   if (!currentUser) {
     toast("Önce giriş yapmalısın.");
+    openAuthModal();
     return;
   }
 
-  const username = $("profileMinecraftName").value.trim();
-  const description = $("profileDescription").value.trim();
-
-  if (!/^[a-zA-Z0-9_]{3,16}$/.test(username)) {
-    toast("Geçerli bir Minecraft kullanıcı adı gir.");
-    return;
-  }
-
-  const { error } = await db
-    .from("player_profiles")
-    .upsert({
-      user_id: currentUser.id,
-      minecraft_username: username,
-      description: description,
-      updated_at: new Date().toISOString()
-    }, {
-      onConflict: "user_id"
-    });
-
-  if (error) {
-    toast("Profil kaydedilemedi: " + error.message);
-    return;
-  }
-
-  toast("Profilin kaydedildi!");
-  await loadPlayerData();
+  toast("Profil kaydı için player_profiles tablosu bağlantısı gerekiyor.");
 }
 
-
-/* ==========================================
-   GÜNLÜK ÖDÜL
-========================================== */
-
-async function loadDailyStatus() {
-  if (!currentUser) return;
-
-  const button = $("claimDailyButton");
-
-  if (button) {
-    button.disabled = false;
-    button.textContent = "GÜNLÜK ÖDÜLÜ AL";
-  }
-
-  setText("dailyMessage", "Günlük ödülünü talep edebilirsin.");
-}
+/* GÜNLÜK ÖDÜL */
 
 async function claimDailyReward() {
   if (!currentUser) {
@@ -2092,719 +1407,172 @@ async function claimDailyReward() {
     return;
   }
 
-  const button = $("claimDailyButton");
-  button.disabled = true;
-  button.textContent = "KONTROL EDİLİYOR...";
-
-  try {
-    const { data, error } = await db.rpc("claim_daily_reward");
-
-    if (error) throw error;
-
-    toast("Günlük ödül talebin işlendi!");
-    setText("dailyMessage", "Ödül talebin başarıyla gönderildi.");
-
-    await loadPlayerData();
-
-  } catch (error) {
-    toast("Ödül alınamadı: " + error.message);
-  } finally {
-    button.disabled = false;
-    button.textContent = "GÜNLÜK ÖDÜLÜ AL";
-  }
+  toast("Günlük ödül sistemi henüz veritabanına bağlanmadı.");
 }
 
+/* BAŞVURU */
 
-/* ==========================================
-   RÜTBE SEPETİ
-========================================== */
-
-function addRankToCart(rank) {
-  if (!rankPrices[rank]) {
-    toast("Bu rütbe bulunamadı.");
-    return;
-  }
-
-  if (rankCart.includes(rank)) {
-    toast("Bu rütbe zaten sepetinde.");
-    return;
-  }
-
-  rankCart.push(rank);
-  renderRankCart();
-
-  toast(rank + " sepete eklendi!");
-}
-
-function removeRankFromCart(rank) {
-  rankCart = rankCart.filter(item => item !== rank);
-  renderRankCart();
-}
-
-function clearRankCart() {
-  rankCart = [];
-  renderRankCart();
-}
-
-function renderRankCart() {
-  const container = $("rankCart");
-  if (!container) return;
-
-  if (rankCart.length === 0) {
-    container.innerHTML =
-      '<p class="note">Sepetinde henüz rütbe bulunmuyor.</p>';
-
-    setText("rankCartTotal", "0 Puan");
-    return;
-  }
-
-  let total = 0;
-
-  container.innerHTML = rankCart.map(rank => {
-    total += rankPrices[rank];
-
-    return `
-      <div class="cartline">
-        <span>${escapeHTML(rank)}</span>
-        <strong>${rankPrices[rank]} Puan</strong>
-        <button class="btn secondary small"
-          onclick="removeRankFromCart('${rank}')">
-          Kaldır
-        </button>
-      </div>
-    `;
-  }).join("");
-
-  setText("rankCartTotal", total + " Puan");
-}
-
-async function checkoutRankCart() {
-  if (!currentUser) {
-    toast("Satın almak için giriş yapmalısın.");
-    openAuthModal();
-    return;
-  }
-
-  if (rankCart.length === 0) {
-    toast("Sepetin boş.");
-    return;
-  }
-
-  const confirmed = confirm(
-    "Sepetindeki rütbeleri satın almak istiyor musun?"
-  );
-
-  if (!confirmed) return;
-
-  try {
-    const { data, error } = await db.rpc(
-      "purchase_rank_cart",
-      { p_ranks: rankCart }
-    );
-
-    if (error) throw error;
-
-    toast("Satın alma isteğin işlendi!");
-    rankCart = [];
-    renderRankCart();
-
-    await loadPlayerData();
-
-  } catch (error) {
-    toast("Satın alma başarısız: " + error.message);
-  }
-}
-
-
-/* ==========================================
-   LİDERLİK TABLOLARI
-========================================== */
-
-async function loadLeaderboards() {
-  const { data, error } = await db
-    .from("public_player_leaderboard")
-    .select("minecraft_username,points,total_minutes")
-    .order("points", { ascending: false })
-    .limit(10);
-
-  if (error) {
-    console.error("Liderlik tablosu:", error);
-
-    $("pointsLeaderboard").innerHTML =
-      '<div class="empty-state">Liderlik tablosu şu anda yüklenemiyor.</div>';
-
-    $("minutesLeaderboard").innerHTML =
-      '<div class="empty-state">Oyun süresi tablosu şu anda yüklenemiyor.</div>';
-
-    return;
-  }
-
-  const points = [...(data || [])].sort(
-    (a, b) => Number(b.points || 0) - Number(a.points || 0)
-  );
-
-  const minutes = [...(data || [])].sort(
-    (a, b) => Number(b.total_minutes || 0) - Number(a.total_minutes || 0)
-  );
-
-  renderLeaderboard("pointsLeaderboard", points, "points", "Puan");
-  renderLeaderboard("minutesLeaderboard", minutes, "total_minutes", "Dakika");
-  setText("heroPlayerCount", data?.length || 0);
-}
-
-function renderLeaderboard(id, rows, field, label) {
-  const container = $(id);
-  if (!container) return;
-
-  if (!rows.length) {
-    container.innerHTML =
-      '<div class="empty-state">Henüz oyuncu bulunmuyor.</div>';
-    return;
-  }
-
-  container.innerHTML = rows.map((player, index) => `
-    <div class="data-row">
-      <strong>${index + 1}. ${escapeHTML(player.minecraft_username)}</strong>
-      <span>${Number(player[field] || 0)} ${label}</span>
-    </div>
-  `).join("");
-}
-
-
-/* ==========================================
-   BAŞARIMLAR VE GÖREVLER
-========================================== */
-
-async function loadAchievements() {
-  const container = $("achievementList");
-
-  const { data, error } = await db
-    .from("achievements")
-    .select("*")
-    .limit(20);
-
-  if (error) {
-    container.innerHTML =
-      '<div class="empty-state">Başarımlar yüklenemedi.</div>';
-    return;
-  }
-
-  if (!data?.length) {
-    container.innerHTML =
-      '<div class="empty-state">Henüz başarım bulunmuyor.</div>';
-    return;
-  }
-
-  container.innerHTML = data.map(item => `
-    <div class="data-row">
-      <strong>🏅 ${escapeHTML(item.name)}</strong>
-      <small>${escapeHTML(item.description || "")}</small>
-    </div>
-  `).join("");
-}
-
-async function loadQuests() {
-  const container = $("questList");
-
-  const { data, error } = await db
-    .from("quests")
-    .select("*")
-    .limit(20);
-
-  if (error) {
-    container.innerHTML =
-      '<div class="empty-state">Görevler yüklenemedi.</div>';
-    return;
-  }
-
-  if (!data?.length) {
-    container.innerHTML =
-      '<div class="empty-state">Şu anda aktif görev yok.</div>';
-    return;
-  }
-
-  container.innerHTML = data.map(item => `
-    <div class="data-row">
-      <strong>🎯 ${escapeHTML(item.name)}</strong>
-      <small>${escapeHTML(item.description || "")}</small>
-    </div>
-  `).join("");
-}
-
-
-/* ==========================================
-   SEZONLAR
-========================================== */
-
-async function loadSeason() {
-  const container = $("activeSeason");
-
-  const { data, error } = await db
-    .from("seasons")
-    .select("*")
-    .eq("active", true)
-    .limit(1);
-
-  if (error || !data?.length) {
-    container.innerHTML =
-      '<div class="empty-state">Aktif sezon bulunamadı.</div>';
-    return;
-  }
-
-  const season = data[0];
-
-  container.innerHTML = `
-    <h2>${escapeHTML(season.name)}</h2>
-    <p class="muted">${escapeHTML(season.description || "")}</p>
-  `;
-}
-
-
-/* ==========================================
-   HABERLER
-========================================== */
-
-async function loadNews() {
-  const container = $("newsList");
-
-  const { data, error } = await db
-    .from("news")
-    .select("*")
-    .eq("published", true)
-    .order("created_at", { ascending: false })
-    .limit(9);
-
-  if (error || !data?.length) {
-    container.innerHTML = `
-      <div class="card">
-        <div class="icon">📰</div>
-        <h3>Henüz duyuru yok</h3>
-        <p>Yeni haberler burada yayınlanacak.</p>
-      </div>
-    `;
-    return;
-  }
-
-  container.innerHTML = data.map(news => `
-    <article class="card">
-      <div class="icon">📰</div>
-      <h3>${escapeHTML(news.title)}</h3>
-      <p>${escapeHTML(news.content || "")}</p>
-      <small class="muted">
-        ${news.created_at
-          ? new Date(news.created_at).toLocaleDateString("tr-TR")
-          : ""}
-      </small>
-    </article>
-  `).join("");
-}
-
-
-/* ==========================================
-   BAŞVURULAR
-========================================== */
-
-function openApplicationForm(type) {
+async function submitApplication() {
   if (!currentUser) {
     toast("Başvuru yapmak için giriş yapmalısın.");
     openAuthModal();
     return;
   }
 
-  $("applicationType").value = type;
-  setText("applicationModalTitle", type + " Başvurusu");
+  const type = $("applicationType").value;
+  const reason = $("applicationReason").value.trim();
 
-  $("applicationMinecraft").value =
-    currentPlayer?.minecraft_username || "";
-
-  $("applicationModal").classList.remove("hidden");
-}
-
-async function submitApplication(event) {
-  event.preventDefault();
-
-  if (!currentUser) {
-    toast("Önce giriş yapmalısın.");
+  if (reason.length < 10) {
+    toast("Lütfen en az 10 karakterlik açıklama yaz.");
     return;
   }
 
-  const application = {
-    user_id: currentUser.id,
-    type: $("applicationType").value,
-    minecraft_username: $("applicationMinecraft").value.trim(),
-    age: Number($("applicationAge").value),
-    discord_username: $("applicationDiscord").value.trim(),
-    reason: $("applicationReason").value.trim(),
-    experience: $("applicationExperience").value.trim(),
-    status: "pending"
-  };
-
-  try {
-    const { error } = await db
-      .from("applications")
-      .insert(application);
-
-    if (error) throw error;
-
-    closeModal("applicationModal");
-    $("applicationForm").reset();
-
-    toast("Başvurun gönderildi. İnceleme bekleniyor.");
-    await loadMyApplications();
-
-  } catch (error) {
-    toast("Başvuru gönderilemedi: " + error.message);
-  }
+  toast(type + " başvurusu için veritabanı bağlantısı gerekiyor.");
 }
 
-async function loadMyApplications() {
-  if (!currentUser) return;
+/* DESTEK */
 
-  const container = $("myApplications");
-
-  const { data, error } = await db
-    .from("applications")
-    .select("*")
-    .eq("user_id", currentUser.id)
-    .order("created_at", { ascending: false });
-
-  if (error) {
-    container.innerHTML =
-      '<div class="empty-state">Başvurular yüklenemedi.</div>';
-    return;
-  }
-
-  if (!data?.length) {
-    container.innerHTML =
-      '<div class="empty-state">Henüz başvurun bulunmuyor.</div>';
-    return;
-  }
-
-  container.innerHTML = data.map(item => `
-    <div class="data-row">
-      <strong>${escapeHTML(item.type || item.application_type)}</strong>
-      <span class="status ${escapeHTML(item.status)}">
-        ${escapeHTML(item.status)}
-      </span>
-    </div>
-  `).join("");
-}
-
-
-/* ==========================================
-   DESTEK MERKEZİ
-========================================== */
-
-async function submitSupportTicket(event) {
-  event.preventDefault();
-
+async function sendSupportRequest() {
   if (!currentUser) {
     toast("Destek talebi için giriş yapmalısın.");
+    openAuthModal();
     return;
   }
 
-  const ticket = {
-    user_id: currentUser.id,
-    category: $("supportCategory").value,
-    title: $("supportTitle").value.trim(),
-    message: $("supportMessage").value.trim(),
-    status: "open"
-  };
+  const title = $("supportTitle").value.trim();
+  const message = $("supportMessage").value.trim();
 
-  try {
-    const { error } = await db
-      .from("support_tickets")
-      .insert(ticket);
-
-    if (error) throw error;
-
-    $("supportForm").reset();
-
-    toast("Destek talebin oluşturuldu!");
-    await loadMySupportTickets();
-
-  } catch (error) {
-    toast("Destek talebi oluşturulamadı: " + error.message);
+  if (!title || message.length < 5) {
+    toast("Konu ve açıklama alanlarını doldur.");
+    return;
   }
+
+  toast("Destek sistemi henüz veritabanına bağlanmadı.");
 }
 
-async function loadMySupportTickets() {
-  if (!currentUser) return;
+/* SATIN ALMA */
 
-  const container = $("mySupportTickets");
-
-  const { data, error } = await db
-    .from("support_tickets")
-    .select("*")
-    .eq("user_id", currentUser.id)
-    .order("created_at", { ascending: false });
-
-  if (error) {
-    container.innerHTML =
-      '<div class="empty-state">Destek talepleri yüklenemedi.</div>';
+async function purchaseCart() {
+  if (rankCart.length === 0) {
+    toast("Sepetin boş.");
     return;
   }
-
-  if (!data?.length) {
-    container.innerHTML =
-      '<div class="empty-state">Henüz destek talebin yok.</div>';
-    return;
-  }
-
-  container.innerHTML = data.map(ticket => `
-    <div class="data-row">
-      <div>
-        <strong>${escapeHTML(ticket.title)}</strong>
-        <small>${escapeHTML(ticket.category)}</small>
-      </div>
-      <span class="status">${escapeHTML(ticket.status)}</span>
-    </div>
-  `).join("");
-}
-
-
-/* ==========================================
-   ÖZEL MESAJLAŞMA
-========================================== */
-
-async function sendPrivateMessage(event) {
-  event.preventDefault();
 
   if (!currentUser) {
-    toast("Mesaj göndermek için giriş yapmalısın.");
+    toast("Satın alma için giriş yapmalısın.");
+    openAuthModal();
     return;
   }
 
-  const recipientName = $("messageRecipient").value.trim();
-  const message = $("privateMessageText").value.trim();
+  toast("Gerçek satın alma için güvenli sunucu tarafı işlem bağlantısı gerekiyor. Henüz puan düşülmedi.");
+}
 
-  if (!message || !recipientName) {
-    toast("Bütün alanları doldurmalısın.");
+/* SUNUCU IP */
+
+async function copyServerIP() {
+  const address = $("serverAddress").textContent.trim();
+
+  if (!address || address.includes("BURAYA_YAZ")) {
+    toast("Önce sunucu IP adresini düzenlemelisin.");
     return;
   }
 
   try {
-    const { data: recipient, error: findError } = await db
-      .from("players")
-      .select("user_id,minecraft_username")
-      .ilike("minecraft_username", recipientName)
-      .maybeSingle();
+    await navigator.clipboard.writeText(address);
+    toast("Sunucu IP adresi kopyalandı!");
+  } catch(error) {
+    toast("IP kopyalanamadı. Manuel olarak kopyalayabilirsin.");
+  }
+}
 
-    if (findError) throw findError;
+/* MOBİL MENÜ */
 
-    if (!recipient) {
-      toast("Bu oyuncu bulunamadı.");
-      return;
+function toggleMobileMenu() {
+  $("mobileMenu").classList.toggle("open");
+}
+
+/* SSS */
+
+function initializeFAQ() {
+  document.querySelectorAll(".faq-question").forEach(button => {
+    button.addEventListener("click",() => {
+      const item = button.closest(".faq-item");
+      item.classList.toggle("open");
+
+      const symbol = button.querySelector("span");
+      symbol.textContent = item.classList.contains("open") ? "−" : "＋";
+    });
+  });
+}
+
+/* BUTONLARI BAĞLA */
+
+function initializeButtons() {
+  $("loginOpen").addEventListener("click",() => {
+    if (currentUser) {
+      logout();
+    } else {
+      openAuthModal();
     }
+  });
 
-    if (recipient.user_id === currentUser.id) {
-      toast("Kendine mesaj gönderemezsin.");
-      return;
+  $("panelOpen").addEventListener("click",() => {
+    document.querySelector("#panel").scrollIntoView({behavior:"smooth"});
+
+    if (!currentUser) {
+      openAuthModal();
     }
+  });
 
-    const { error } = await db
-      .from("private_messages")
-      .insert({
-        sender_id: currentUser.id,
-        recipient_id: recipient.user_id,
-        message: message
-      });
+  $("closeAuth").addEventListener("click",closeAuthModal);
+  $("loginTab").addEventListener("click",() => switchAuthTab("login"));
+  $("registerTab").addEventListener("click",() => switchAuthTab("register"));
 
-    if (error) throw error;
+  $("authForm").addEventListener("submit",handleAuth);
 
-    $("privateMessageForm").reset();
+  $("mobileToggle").addEventListener("click",toggleMobileMenu);
+  $("copyIP").addEventListener("click",copyServerIP);
 
-    toast("Mesaj gönderildi!");
-    await loadPrivateMessages();
+  $("saveProfile").addEventListener("click",savePlayerProfile);
+  $("dailyButton").addEventListener("click",claimDailyReward);
+  $("sendApplication").addEventListener("click",submitApplication);
+  $("sendSupport").addEventListener("click",sendSupportRequest);
+  $("purchaseButton").addEventListener("click",purchaseCart);
 
-  } catch (error) {
-    toast("Mesaj gönderilemedi: " + error.message);
-  }
+  document.querySelectorAll(".sidebar button").forEach(button => {
+    button.addEventListener("click",() => {
+      switchPanelTab(button.dataset.tab);
+    });
+  });
+
+  document.querySelectorAll(".mobile-menu a").forEach(link => {
+    link.addEventListener("click",() => {
+      $("mobileMenu").classList.remove("open");
+    });
+  });
+
+  $("authModal").addEventListener("click",event => {
+    if (event.target === $("authModal")) {
+      closeAuthModal();
+    }
+  });
 }
 
-async function loadPrivateMessages() {
-  if (!currentUser) return;
+/* SAYFA BAŞLANGICI */
 
-  const container = $("privateMessageList");
+function initializeDarkSMP() {
+  setText("year",new Date().getFullYear());
 
-  const { data, error } = await db
-    .from("private_messages")
-    .select("*")
-    .or(
-      `sender_id.eq.${currentUser.id},recipient_id.eq.${currentUser.id}`
-    )
-    .order("created_at", { ascending: false })
-    .limit(50);
+  renderRanks();
+  renderCart();
+  initializeButtons();
+  initializeFAQ();
+  initializeSupabase();
 
-  if (error) {
-    container.innerHTML =
-      '<div class="empty-state">Mesajlar yüklenemedi.</div>';
-    return;
-  }
-
-  if (!data?.length) {
-    container.innerHTML =
-      '<div class="empty-state">Henüz mesajın bulunmuyor.</div>';
-    return;
-  }
-
-  container.innerHTML = data.map(item => {
-    const outgoing = item.sender_id === currentUser.id;
-
-    return `
-      <div class="dm-item ${outgoing ? "outgoing" : "incoming"}">
-        <div class="dm-meta">
-          <span>${outgoing ? "Gönderilen" : "Gelen"}</span>
-          <span>
-            ${item.created_at
-              ? new Date(item.created_at).toLocaleString("tr-TR")
-              : ""}
-          </span>
-        </div>
-        <p>${escapeHTML(item.message)}</p>
-      </div>
-    `;
-  }).join("");
+  switchPanelTab("overview");
 }
 
-
-/* ==========================================
-   YÖNETİM PANELİ
-========================================== */
-
-async function checkAdmin() {
-  if (!currentUser) return;
-
-  const { data, error } = await db
-    .from("admins")
-    .select("user_id")
-    .eq("user_id", currentUser.id)
-    .maybeSingle();
-
-  if (error || !data) {
-    $("adminLocked").classList.remove("hidden");
-    $("adminContent").classList.add("hidden");
-    return;
-  }
-
-  $("adminLocked").classList.add("hidden");
-  $("adminContent").classList.remove("hidden");
-
-  await loadAdminData();
-}
-
-async function loadAdminData() {
-  if (!currentUser) return;
-
-  const { data: applications } = await db
-    .from("applications")
-    .select("*")
-    .order("created_at", { ascending: false });
-
-  const { data: tickets } = await db
-    .from("support_tickets")
-    .select("*")
-    .order("created_at", { ascending: false });
-
-  const { data: orders } = await db
-    .from("store_orders")
-    .select("*")
-    .order("created_at", { ascending: false });
-
-  setText("adminApplicationCount", applications?.length || 0);
-  setText("adminTicketCount", tickets?.length || 0);
-  setText("adminOrderCount", orders?.length || 0);
-
-  renderAdminApplications(applications || []);
-  renderAdminTickets(tickets || []);
-  renderAdminOrders(orders || []);
-}
-
-function renderAdminApplications(rows) {
-  const container = $("adminApplications");
-
-  if (!rows.length) {
-    container.innerHTML =
-      '<div class="empty-state">Başvuru bulunmuyor.</div>';
-    return;
-  }
-
-  container.innerHTML = rows.map(item => `
-    <div class="data-row">
-      <div>
-        <strong>${escapeHTML(item.minecraft_username)}</strong>
-        <small>${escapeHTML(item.type || item.application_type)}</small>
-      </div>
-      <span class="status">${escapeHTML(item.status)}</span>
-    </div>
-  `).join("");
-}
-
-function renderAdminTickets(rows) {
-  const container = $("adminTickets");
-
-  if (!rows.length) {
-    container.innerHTML =
-      '<div class="empty-state">Destek talebi bulunmuyor.</div>';
-    return;
-  }
-
-  container.innerHTML = rows.map(item => `
-    <div class="data-row">
-      <div>
-        <strong>${escapeHTML(item.title)}</strong>
-        <small>${escapeHTML(item.category)}</small>
-      </div>
-      <span class="status">${escapeHTML(item.status)}</span>
-    </div>
-  `).join("");
-}
-
-function renderAdminOrders(rows) {
-  const container = $("adminOrders");
-
-  if (!rows.length) {
-    container.innerHTML =
-      '<div class="empty-state">Sipariş bulunmuyor.</div>';
-    return;
-  }
-
-  container.innerHTML = rows.map(item => `
-    <div class="data-row">
-      <strong>${escapeHTML(item.rank_name || item.rank || "Rütbe")}</strong>
-      <span class="status">${escapeHTML(item.status || "Bekliyor")}</span>
-    </div>
-  `).join("");
-}
-
-
-/* ==========================================
-   BAŞLANGIÇ
-========================================== */
-
-async function initializeDarkSMP() {
-  if (
-    SUPABASE_URL === "https://frfltsscbbvgjdffrxot.supabase.co";
-    SUPABASE_ANON_KEY === "sb_publishable_TLuw_sK8M8gi4gFwBAx2gg__-t0ahzE"
-  ) {
-    toast("Supabase bağlantı bilgilerini eklemelisin.");
-    return;
-  }
-
-  await restoreSession();
-
-  await Promise.allSettled([
-    loadLeaderboards(),
-    loadAchievements(),
-    loadQuests(),
-    loadSeason(),
-    loadNews()
-  ]);
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  initializeDarkSMP();
-});
+document.addEventListener("DOMContentLoaded",initializeDarkSMP);
 </script>
 
 </body>
